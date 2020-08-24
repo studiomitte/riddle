@@ -1,5 +1,7 @@
 # TYPO3 Extension `riddle`
 
+![Build Status](https://github.com/studiomitte/riddle/workflows/CI/badge.svg)
+
 This extension embeds rich media from [riddle.com](https://www.riddle.com)
 
 ![Plugin in Backend](Resources/Public/Screenshots/Backend.png)
