@@ -8,7 +8,7 @@ jobs:
     strategy:
       matrix:
         typo3: [^10.4]
-        php: ['7.4', '7.3', '7.2']
+        php: ['7.4', '7.3']
         os: [ubuntu-latest]
 
     steps:
@@ -21,6 +21,12 @@ jobs:
           php -v
       - name: Validate composer.json and composer.lock
         run: composer validate
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache
+          key: dependencies-composer-${{ hashFiles('composer.json') }}
 
       - name: Install dependencies with typo3/cms-core:${{ matrix.typo3 }}
         run: |
