@@ -86,5 +86,4 @@ class RiddleApiTest extends BaseTestCase
 
         self::assertEquals($response, $mockedRiddleApi->getEmbedCode(123));
     }
-
 }

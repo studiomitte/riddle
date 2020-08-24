@@ -18,7 +18,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class ItemsProcFuncTest extends BaseTestCase
 {
-
     protected $allRiddles = [
         [
             'id' => 123,

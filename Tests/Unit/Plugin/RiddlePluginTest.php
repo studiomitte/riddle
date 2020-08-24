@@ -22,7 +22,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddlePluginTest extends BaseTestCase
 {
-
     use ProphecyTrait;
 
     /**

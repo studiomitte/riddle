@@ -94,5 +94,4 @@ class RiddleApi
         }
         return GeneralUtility::makeInstance(Client::class, $httpOptions);
     }
-
 }

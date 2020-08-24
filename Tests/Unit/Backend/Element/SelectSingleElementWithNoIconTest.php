@@ -74,5 +74,4 @@ class SelectSingleElementWithNoIconTest extends BaseTestCase
 
         self::assertStringContainsString('input-group-addon input-group-icon hidden', $mockedSelectSingleElement->render()['html']);
     }
-
 }

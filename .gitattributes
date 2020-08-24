@@ -4,4 +4,5 @@
 /.github/ export-ignore
 /.gitignore export-ignore
 /.phplint.yml export-ignore
+/.php_cs.cache
 /Todos.md

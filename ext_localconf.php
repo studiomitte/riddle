@@ -26,6 +26,5 @@ call_user_func(static function () {
 
         $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['cms/layout/class.tx_cms_layout.php']['list_type_Info']['riddle_riddle']['riddle'] =
             \StudioMitte\Riddle\Hooks\PageLayoutView::class . '->getExtensionSummary';
-
     }
 });

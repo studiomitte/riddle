@@ -10,6 +10,8 @@ call_user_func(static function () {
 
     $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_excludelist']['riddle_riddle'] = 'recursive,select_key,pages';
     $GLOBALS['TCA']['tt_content']['types']['list']['subtypes_addlist']['riddle_riddle'] = 'pi_flexform';
-    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue('riddle_riddle',
-        'FILE:EXT:riddle/Configuration/FlexForms/flexform_riddle.xml');
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addPiFlexFormValue(
+        'riddle_riddle',
+        'FILE:EXT:riddle/Configuration/FlexForms/flexform_riddle.xml'
+    );
 });

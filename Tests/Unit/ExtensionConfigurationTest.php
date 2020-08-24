@@ -18,7 +18,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class ExtensionConfigurationTest extends BaseTestCase
 {
-
     use ProphecyTrait;
 
     /**
@@ -57,6 +56,5 @@ class ExtensionConfigurationTest extends BaseTestCase
 
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['riddle'] = [];
         new ExtensionConfiguration();
-
     }
 }
