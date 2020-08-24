@@ -1,0 +1,13 @@
+mod.wizards.newContentElement.wizardItems.plugins {
+    elements {
+        riddle {
+            iconIdentifier = ext-riddle-plugin
+            title = LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:plugin.title
+            description = LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:plugin.description
+            tt_content_defValues {
+                CType = list
+                list_type = riddle_riddle
+            }
+        }
+    }
+}

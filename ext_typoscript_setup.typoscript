@@ -1,0 +1,5 @@
+
+tt_content.list.20.riddle_riddle = USER
+tt_content.list.20.riddle_riddle {
+    userFunc = StudioMitte\Riddle\Plugin\RiddlePlugin->run
+}

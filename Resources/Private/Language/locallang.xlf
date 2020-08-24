@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+ <file source-language="en" date="2020-08-22T20:56:54+02:00">
+  <body>
+   <trans-unit id="plugin.title" resname="plugin.title">
+    <source>Riddle.com rich media</source>
+   </trans-unit>
+   <trans-unit id="plugin.description" resname="plugin.description">
+    <source>Show a quiz, list, ... whatever you created at riddle.com</source>
+   </trans-unit>
+   <trans-unit id="plugin.flexform.settings" resname="plugin.flexform.settings">
+    <source>Settings</source>
+   </trans-unit>
+   <trans-unit id="plugin.flexform.riddle" resname="plugin.flexform.riddle">
+    <source>Select a riddle</source>
+   </trans-unit>
+   <trans-unit id="error.noRiddleResponse" resname="error.noRiddleResponse">
+    <source>Sorry, no information from riddle.com could be retrieved. Maybe the riddle has been removed or the API is currently down?</source>
+   </trans-unit>
+   <trans-unit id="error.noRiddleIdProvided" resname="error.noRiddleIdProvided">
+    <source>No riddle has been selected in the plugin. Please open the plugin and select a riddle!</source>
+   </trans-unit>
+   <trans-unit id="error.apiNotConfigured" resname="error.apiNotConfigured">
+    <source>The API credentials are not yet provided.</source>
+   </trans-unit>
+   <trans-unit id="riddle.overview" resname="riddle.overview">
+    <source>Overview</source>
+   </trans-unit>
+   <trans-unit id="riddle.type" resname="riddle.type">
+    <source>Type</source>
+   </trans-unit>
+   <trans-unit id="riddle.id" resname="riddle.id">
+    <source>ID</source>
+   </trans-unit>
+   <trans-unit id="riddle.dateCreated" resname="riddle.dateCreated">
+    <source>Date created</source>
+   </trans-unit>
+   <trans-unit id="riddle.datepublished" resname="riddle.datepublished">
+    <source>Date published</source>
+   </trans-unit>
+   <trans-unit id="riddle.userCreated" resname="riddle.userCreated">
+    <source>created by</source>
+   </trans-unit>
+   <trans-unit id="riddle.userPublished" resname="riddle.userPublished">
+    <source>published by</source>
+   </trans-unit>
+   <trans-unit id="riddle.created" resname="riddle.created">
+    <source>Created</source>
+   </trans-unit>
+   <trans-unit id="riddle.published" resname="riddle.published">
+    <source>Published</source>
+   </trans-unit>
+   <trans-unit id="riddle.tags" resname="riddle.tags">
+    <source>Tags</source>
+   </trans-unit>
+   <trans-unit id="link.open" resname="link.open">
+    <source>Preview on riddle.com</source>
+   </trans-unit>
+   <trans-unit id="link.edit" resname="link.edit">
+    <source>Edit on riddle.com</source>
+   </trans-unit>
+  </body>
+ </file>
+</xliff>

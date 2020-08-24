@@ -1,0 +1,38 @@
+<T3DataStructure>
+    <sheets>
+
+        <sDEF>
+            <ROOT>
+                <TCEforms>
+                    <sheetTitle>LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:plugin.flexform.settings</sheetTitle>
+                </TCEforms>
+                <type>array</type>
+                <el>
+                    <riddle>
+                        <TCEforms>
+                            <label>LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:plugin.flexform.riddle</label>
+                            <config>
+                                <type>select</type>
+                                <itemsProcFunc>StudioMitte\Riddle\Hooks\ItemsProcFunc->riddleList</itemsProcFunc>
+                                <renderType>selectSingleWithNoIconPrefix</renderType>
+                                <items>
+                                    <numIndex index="1">
+                                        <numIndex index="0"></numIndex>
+                                        <numIndex index="1"></numIndex>
+                                    </numIndex>
+                                </items>
+                                <fieldWizard>
+                                    <externalIcons>
+                                        <renderType>ExternalIcons</renderType>
+                                        <disabled>0</disabled>
+                                    </externalIcons>
+                                </fieldWizard>
+                            </config>
+                        </TCEforms>
+                    </riddle>
+
+                </el>
+            </ROOT>
+        </sDEF>
+    </sheets>
+</T3DataStructure>

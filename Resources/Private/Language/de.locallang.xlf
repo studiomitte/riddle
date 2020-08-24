@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<xliff version="1.0">
+ <file source-language="en" target-language="de" date="2020-08-22T20:56:54+02:00">
+  <body>
+   <trans-unit id="plugin.title" resname="plugin.title">
+    <source>Riddle.com rich media</source>
+    <target>Einbinden von riddle.com-Inhalten</target>
+   </trans-unit>
+   <trans-unit id="plugin.description" resname="plugin.description">
+    <source>Show a quiz, list, ... whatever you created at riddle.com</source>
+    <target>Zeige ein Quiz, Umfrage, ... </target>
+   </trans-unit>
+   <trans-unit id="plugin.flexform.settings" resname="plugin.flexform.settings">
+    <source>Settings</source>
+    <target>Einstellungen</target>
+   </trans-unit>
+   <trans-unit id="plugin.flexform.riddle" resname="plugin.flexform.riddle">
+    <source>Select a riddle</source>
+    <target>Wähle ein riddle aus</target>
+   </trans-unit>
+   <trans-unit id="error.noRiddleResponse" resname="error.noRiddleResponse">
+    <source>Sorry, no information from riddle.com could be retrieved. Maybe the riddle has been removed or the API is currently down?</source>
+    <target>Es konnte leider keine Informationen von riddle.com abgefragt werden. Vielleicht ist das Riddle nicht mehr verfügbar oder die API nicht erreichbar</target>
+   </trans-unit>
+   <trans-unit id="error.noRiddleIdProvided" resname="error.noRiddleIdProvided">
+    <source>No riddle has been selected in the plugin. Please open the plugin and select a riddle!</source>
+    <target>Es wurde noch kein Riddle ausgewählt. Bitte öffne das Plugin und wähle ein Riddle aus!</target>
+   </trans-unit>
+   <trans-unit id="error.apiNotConfigured" resname="error.apiNotConfigured">
+    <source>The API credentials are not yet provided.</source>
+    <target>Die API Zugangsdaten wurden noch nicht hinterlegt.</target>
+   </trans-unit>
+   <trans-unit id="riddle.overview" resname="riddle.overview">
+    <source>Overview</source>
+    <target>Übersicht</target>
+   </trans-unit>
+   <trans-unit id="riddle.type" resname="riddle.type">
+    <source>Type</source>
+    <target>Typ</target>
+   </trans-unit>
+   <trans-unit id="riddle.id" resname="riddle.id">
+    <source>ID</source>
+    <target>ID</target>
+   </trans-unit>
+   <trans-unit id="riddle.dateCreated" resname="riddle.dateCreated">
+    <source>Date created</source>
+    <target>Erstellungsdatum</target>
+   </trans-unit>
+   <trans-unit id="riddle.datepublished" resname="riddle.datepublished">
+    <source>Date published</source>
+    <target>Veröffentlichungsdatum</target>
+   </trans-unit>
+   <trans-unit id="riddle.userCreated" resname="riddle.userCreated">
+    <source>created by</source>
+    <target>erstellt von</target>
+   </trans-unit>
+   <trans-unit id="riddle.userPublished" resname="riddle.userPublished">
+    <source>published by</source>
+    <target>veröffentlicht von</target>
+   </trans-unit>
+   <trans-unit id="riddle.created" resname="riddle.created">
+    <source>Created</source>
+    <target>Erstellt</target>
+   </trans-unit>
+   <trans-unit id="riddle.published" resname="riddle.published">
+    <source>Published</source>
+    <target>Veröffentlicht</target>
+   </trans-unit>
+   <trans-unit id="riddle.tags" resname="riddle.tags">
+    <source>Tags</source>
+    <target>Tags</target>
+   </trans-unit>
+   <trans-unit id="link.open" resname="link.open">
+    <source>Preview on riddle.com</source>
+    <target>Vorschau auf riddle.com</target>
+   </trans-unit>
+   <trans-unit id="link.edit" resname="link.edit">
+    <source>Edit on riddle.com</source>
+    <target>Edit on riddle.com</target>
+   </trans-unit>
+  </body>
+ </file>
+</xliff>
