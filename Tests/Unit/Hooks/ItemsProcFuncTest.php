@@ -12,7 +12,9 @@ namespace StudioMitte\Riddle\Tests\Unit\Hooks;
  */
 
 use PHPUnit\Framework\MockObject\MockObject;
+use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Hooks\ItemsProcFunc;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\AccessibleObjectInterface;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
@@ -51,5 +53,27 @@ class ItemsProcFuncTest extends BaseTestCase
             ['Another riddle [Quiz] - 21-09-19', 456, ''],
         ];
         self::assertEquals($expected, $config['items']);
+    }
+
+    /**
+     * @test
+     */
+    public function allRiddlesAreReturned(): void
+    {
+        $allRiddles = [
+            'response' => [
+                'items' => [
+                    ['title' => 'riddle 1'],
+                    ['title' => 'riddle 2'],
+                ]
+            ]
+        ];
+        /** @var RiddleApi $riddleApiProphecy */
+        $riddleApiProphecy = $this->prophesize(RiddleApi::class);
+        $riddleApiProphecy->getRiddleList()->willReturn($allRiddles);
+        GeneralUtility::addInstance(RiddleApi::class, $riddleApiProphecy->reveal());
+
+        $mockedRiddleApi = $this->getAccessibleMock(ItemsProcFunc::class, ['dummy'], [], '', false);
+        self::assertEquals($allRiddles['response']['items'], $mockedRiddleApi->_call('getAllRiddles'));
     }
 }

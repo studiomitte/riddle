@@ -49,8 +49,11 @@ class RiddleApiTest extends BaseTestCase
 
     /**
      * @test
+     * @dataProvider riddleIdReturnsResultDataProvider
+     * @param int $id
+     * @param array $expectedResult
      */
-    public function riddleIdReturnsResult(): void
+    public function riddleIdReturnsResult(int $id, array $expectedResult): void
     {
         $response = ['response' => ['items' => $this->listOfRiddles]];
         $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['request'], [], '', false);
@@ -61,12 +64,25 @@ class RiddleApiTest extends BaseTestCase
         $extensionConfiguration->getApiToken()->willReturn('def');
         $mockedRiddleApi->_set('extensionConfiguration', $extensionConfiguration->reveal());
 
-        $riddle = $mockedRiddleApi->getRiddleItem(456);
-        self::assertEquals([
-            'title' => 'riddle 2',
-            'id' => 456
-        ], $riddle);
+        $riddle = $mockedRiddleApi->getRiddleItem($id);
+        self::assertEquals($expectedResult, $riddle);
     }
+
+    public function riddleIdReturnsResultDataProvider(): array
+    {
+        return [
+            'riddle found' => [
+                456, [
+                    'title' => 'riddle 2',
+                    'id' => 456
+                ]
+            ],
+            'no riddle found' => [
+                123456, []
+            ]
+        ];
+    }
+
 
     /**
      * @test

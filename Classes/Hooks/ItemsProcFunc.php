@@ -30,6 +30,7 @@ class ItemsProcFunc
             foreach ($riddles as $item) {
                 $config['items'][] = $this->getSelectItem($item);
             }
+            // @codeCoverageIgnoreStart
         } catch (\Exception $e) {
             $message = GeneralUtility::makeInstance(
                 FlashMessage::class,
@@ -41,6 +42,7 @@ class ItemsProcFunc
                 ->getMessageQueueByIdentifier()
                 ->enqueue($message);
         }
+        // @codeCoverageIgnoreEnd
     }
 
     protected function getSelectItem(array $item): array

@@ -12,6 +12,7 @@ namespace StudioMitte\Riddle\Tests\Unit\Plugin;
  */
 
 use Prophecy\Argument;
+use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Plugin\RiddlePlugin;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
@@ -24,8 +25,9 @@ class RiddlePluginTest extends BaseTestCase
 
     /**
      * @test
+     * @dataProvider htmlCodeIsDeliveredDataProvider
      */
-    public function htmlCodeIsDelivered(): void
+    public function htmlCodeIsDelivered(int $id, string $html): void
     {
         $cacheFrontendProphecy = $this->prophesize(PhpFrontend::class);
         $cacheFrontendProphecy->require(Argument::any())->willReturn(false);
@@ -44,7 +46,7 @@ class RiddlePluginTest extends BaseTestCase
         <sheet index="sDEF">
             <language index="lDEF">
                 <field index="riddle">
-                    <value index="vDEF">456</value>
+                    <value index="vDEF">' . $id . '</value>
                 </field>
             </language>
         </sheet>
@@ -53,8 +55,38 @@ class RiddlePluginTest extends BaseTestCase
         ]);
         $mockedProvider = $this->getAccessibleMock(RiddlePlugin::class, ['getRiddleHtml'], [], '', false);
         $mockedProvider->_set('cObj', $mockedContentObjectRenderer);
-        $mockedProvider->expects(self::once())->method('getRiddleHtml')->willReturn('some html string');
+        if ($html) {
+            $mockedProvider->expects(self::once())->method('getRiddleHtml')->with($id)->willReturn($html);
+        } else {
+            $mockedProvider->expects(self::never())->method('getRiddleHtml')->with($id)->willReturn($html);
+        }
+        self::assertEquals($html, $mockedProvider->run('', []));
+    }
 
-        self::assertEquals('some html string', $mockedProvider->run('', []));
+    public function htmlCodeIsDeliveredDataProvider(): array
+    {
+        return [
+            'working flexforms' => [
+                456, 'some html string'
+            ],
+            'non working flexforms' => [
+                0, ''
+            ]
+        ];
+    }
+
+    /**
+     * @test
+     */
+    public function properApiCallIsUsed()
+    {
+        /** @var RiddleApi $riddleApiProphecy */
+        $riddleApiProphecy = $this->prophesize(RiddleApi::class);
+        $response = ['response' => 'some html'];
+        $riddleApiProphecy->getEmbedCode(123)->willReturn($response);
+        GeneralUtility::addInstance(RiddleApi::class, $riddleApiProphecy->reveal());
+
+        $mockedRiddleApi = $this->getAccessibleMock(RiddlePlugin::class, ['dummy'], [], '', false);
+        self::assertEquals('some html', $mockedRiddleApi->_call('getRiddleHtml', 123));
     }
 }
