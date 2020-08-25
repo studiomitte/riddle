@@ -11,14 +11,12 @@ namespace StudioMitte\Riddle\Tests\Unit\Api;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Prophecy\PhpUnit\ProphecyTrait;
 use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\ExtensionConfiguration;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddleApiTest extends BaseTestCase
 {
-//    use ProphecyTrait;
 
     private $listOfRiddles = [
         [

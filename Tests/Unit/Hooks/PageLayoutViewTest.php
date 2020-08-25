@@ -11,7 +11,6 @@ namespace StudioMitte\Riddle\Tests\Unit\Hooks;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Prophecy\PhpUnit\ProphecyTrait;
 use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Hooks\PageLayoutView;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -19,7 +18,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class PageLayoutViewTest extends BaseTestCase
 {
-//    use ProphecyTrait;
 
     /**
      * @test

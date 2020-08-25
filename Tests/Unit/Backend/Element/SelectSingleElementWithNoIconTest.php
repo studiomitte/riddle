@@ -12,7 +12,6 @@ namespace StudioMitte\Riddle\Tests\Unit\Backend\Element;
  */
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use StudioMitte\Riddle\Backend\Element\SelectSingleElementWithNoIcon;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
@@ -21,7 +20,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class SelectSingleElementWithNoIconTest extends BaseTestCase
 {
-//    use ProphecyTrait;
 
     /**
      * @test

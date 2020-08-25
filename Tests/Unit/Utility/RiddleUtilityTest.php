@@ -12,7 +12,6 @@ namespace StudioMitte\Riddle\Tests\Unit\Utility;
  */
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use StudioMitte\Riddle\Utility\RiddleUtility;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
@@ -21,7 +20,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddleUtilityTest extends BaseTestCase
 {
-//    use ProphecyTrait;
 
     /**
      * @test
@@ -31,6 +29,7 @@ class RiddleUtilityTest extends BaseTestCase
      */
     public function apiDataIsEnriched(array $given, array $expected): void
     {
+        date_default_timezone_set('Europe/Berlin');
         self::assertEquals($expected, RiddleUtility::enrichRiddleData($given));
     }
 
