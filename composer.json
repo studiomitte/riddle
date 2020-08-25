@@ -32,7 +32,8 @@
     "require-dev": {
         "phpspec/prophecy-phpunit": "^2.0",
         "typo3/testing-framework": "^6.4",
-        "friendsofphp/php-cs-fixer": "^2.16"
+        "friendsofphp/php-cs-fixer": "^2.16",
+        "php-coveralls/php-coveralls": "^2"
     },
     "autoload": {
         "psr-4": {
@@ -65,6 +66,7 @@
         "ci:php:lint": "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l",
         "ci:php:fixer": "php-cs-fixer --diff -v fix",
         "ci:tests:unit": "phpunit -c Build/UnitTests.xml",
+        "ci:tests:unit-coverage": "phpunit -c Build/UnitTests.xml --coverage-text --coverage-clover .Build/logs/clover.xml",
         "ci:tests:functional": "find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo \"Running functional test suite {}\"; php -d date.timezone=Europe/Berlin .build/vendor/bin/phpunit -c .build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml {}';",
         "post-autoload-dump": [
             "mkdir -p .build/web/typo3conf/ext/",

@@ -45,6 +45,15 @@ jobs:
         run: |
           composer ci:tests:unit
 
+      - name: Run unit tests
+        run: |
+          composer ci:tests:unit-coverage
+      - name: Send code coverage report to coveralls.io
+        run: .Build/bin/php-coveralls -v
+        env:
+          COVERALLS_RUN_LOCALLY: 1
+          COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
+
 #      - name: Functional Tests
 #        env:
 #          typo3DatabaseName: test
