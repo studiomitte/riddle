@@ -19,7 +19,7 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class PageLayoutViewTest extends BaseTestCase
 {
-    use ProphecyTrait;
+//    use ProphecyTrait;
 
     /**
      * @test

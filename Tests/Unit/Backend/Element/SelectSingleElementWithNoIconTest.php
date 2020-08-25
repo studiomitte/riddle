@@ -21,7 +21,7 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class SelectSingleElementWithNoIconTest extends BaseTestCase
 {
-    use ProphecyTrait;
+//    use ProphecyTrait;
 
     /**
      * @test

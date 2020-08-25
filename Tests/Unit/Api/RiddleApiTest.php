@@ -18,7 +18,7 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddleApiTest extends BaseTestCase
 {
-    use ProphecyTrait;
+//    use ProphecyTrait;
 
     private $listOfRiddles = [
         [

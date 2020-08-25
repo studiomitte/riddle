@@ -30,7 +30,7 @@
         "typo3/cms-fluid": "^9 || ^10"
     },
     "require-dev": {
-        "phpspec/prophecy-phpunit": "^2.0",
+        "phpspec/prophecy-phpunit": "^1",
         "typo3/testing-framework": "^6.4",
         "friendsofphp/php-cs-fixer": "^2.16"
     },
