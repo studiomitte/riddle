@@ -12,7 +12,6 @@ namespace StudioMitte\Riddle\Tests\Unit\Plugin;
  */
 
 use Prophecy\Argument;
-use Prophecy\PhpUnit\ProphecyTrait;
 use StudioMitte\Riddle\Plugin\RiddlePlugin;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
@@ -22,7 +21,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddlePluginTest extends BaseTestCase
 {
-    use ProphecyTrait;
 
     /**
      * @test

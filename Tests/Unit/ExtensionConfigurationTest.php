@@ -11,14 +11,12 @@ namespace StudioMitte\Riddle\Tests\Unit;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Prophecy\PhpUnit\ProphecyTrait;
 use StudioMitte\Riddle\Exception\ApiConfigurationMissingException;
 use StudioMitte\Riddle\ExtensionConfiguration;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class ExtensionConfigurationTest extends BaseTestCase
 {
-    use ProphecyTrait;
 
     /**
      * @test
