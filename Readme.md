@@ -4,7 +4,7 @@
 
 This extension embeds rich media from [riddle.com](https://www.riddle.com)
 
-![Plugin in Backend](Resources/Public/Screenshots/Backend.png)
+![Plugin in Backend](Documentation/Images/backend.png)
 
 ## Installation
 
@@ -13,11 +13,11 @@ Either use `composer require studiomitte/riddle` or by downloading it from the [
 
 Now switch to the [riddle.com account page](https://www.riddle.com/creator/account/api), enable the API and copy the **API token** and **API key**.
 
-![riddle.com API](Resources/Public/Screenshots/RiddleApi.png)
+![riddle.com API](Documentation/Images/riddleApi.png)
 
 Open the settings in TYPO3 Install Tool and paste the 2 keys there.
 
-![Settings in TYPO3](Resources/Public/Screenshots/Settings.png)
+![Settings in TYPO3](Documentation/Images/settings.png)
 
 ## Usage
 
