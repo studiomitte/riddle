@@ -8,11 +8,7 @@
         <f:if condition="{riddle}">
             <f:then>
                 <h3>{riddle.title}</h3>
-                <div class="row">
-                    <div class="col-xs-6">
                         <img src="{riddle.thumb}" class="img-responsive" alt="{riddle.title}"/>
-                    </div>
-                    <div class="col-xs-6">
                         <table class="table table-condensed table-striped table-hover">
                             <thead>
                                 <tr>
@@ -55,8 +51,7 @@
                             </f:if>
                             </tbody>
                         </table>
-                    </div>
-                </div>
+
                 <div class="btn-toolbar" style="margin-top:10px">
                     <a class="btn btn-default" target="_blank" rel="noopener" href="https://www.riddle.com/view/{riddle.id}">
                         <core:icon identifier="actions-document-view" size="small"/>
