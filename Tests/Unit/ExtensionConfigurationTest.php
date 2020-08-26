@@ -11,8 +11,12 @@ namespace StudioMitte\Riddle\Tests\Unit;
  * LICENSE.txt file that was distributed with this source code.
  */
 
+use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Exception\ApiConfigurationMissingException;
 use StudioMitte\Riddle\ExtensionConfiguration;
+use StudioMitte\Riddle\Hooks\PageLayoutView;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration as ExtensionConfigurationCore;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class ExtensionConfigurationTest extends BaseTestCase
@@ -49,6 +53,21 @@ class ExtensionConfigurationTest extends BaseTestCase
      */
     public function emptyConfigurationThrowsException(): void
     {
+        $this->expectException(ApiConfigurationMissingException::class);
+        $this->expectExceptionCode(1598035744);
+
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['riddle'] = [];
+        new ExtensionConfiguration();
+    }
+
+    /**
+     * @test
+     */
+    public function exceptionsAreHandledInConstructor(): void {
+        $mockedCoreExtensionConfiguration = $this->getAccessibleMock(ExtensionConfigurationCore::class, ['get'], [], '', false);
+        $mockedCoreExtensionConfiguration->expects(self::once())->method('get')->with('riddle')->willThrowException(new \RuntimeException('faked exception'));
+        GeneralUtility::addInstance(ExtensionConfigurationCore::class, $mockedCoreExtensionConfiguration);
+
         $this->expectException(ApiConfigurationMissingException::class);
         $this->expectExceptionCode(1598035744);
 
