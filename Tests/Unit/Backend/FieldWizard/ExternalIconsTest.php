@@ -26,7 +26,8 @@ class ExternalIconsTest extends BaseTestCase
             'tableName' => 'tt_content',
             'fieldName' => 'field',
             'databaseRow' => [
-                'uid' => 123
+                'uid' => 123,
+                'field' => ['fo']
             ],
             'parameterArray' => [
                 'itemFormElName' => 'itemFormElName',
