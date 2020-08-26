@@ -15,6 +15,7 @@ use Prophecy\Argument;
 use StudioMitte\Riddle\Backend\Element\SelectSingleElementWithNoIcon;
 use TYPO3\CMS\Core\Imaging\Icon;
 use TYPO3\CMS\Core\Imaging\IconFactory;
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
@@ -26,6 +27,9 @@ class SelectSingleElementWithNoIconTest extends BaseTestCase
      */
     public function hiddenClassIsAdded(): void
     {
+        if (GeneralUtility::makeInstance(Typo3Version::class)->getMajorVersion() < 10) {
+            self::markTestSkipped('Does not work on 9');
+        }
         $data = [
             'tableName' => 'tt_content',
             'fieldName' => 'field',

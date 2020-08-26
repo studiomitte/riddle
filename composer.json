@@ -31,8 +31,8 @@
     },
     "require-dev": {
         "phpspec/prophecy-phpunit": "^1",
-        "typo3/testing-framework": "^6.4",
-		"phpunit/phpunit": "^8",
+        "typo3/testing-framework": "^6.4 || ^4 || ^5",
+	"phpunit/phpunit": "^8 || ^7",
         "friendsofphp/php-cs-fixer": "^2.16"
     },
     "autoload": {
