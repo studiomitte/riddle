@@ -38,7 +38,7 @@ The rendering is controlled with the TypoScript shipped in the `ext_typoscript_s
 ```typo3_typoscript
 tt_content.list.20.riddle_riddle = USER
 tt_content.list.20.riddle_riddle {
-    userFunc = StudioMitte\Riddle\Plugin\RiddlePlugin->run
+    userFunc = StudioMitte\Riddle\Controller\PluginController->run
 }
 ```
 

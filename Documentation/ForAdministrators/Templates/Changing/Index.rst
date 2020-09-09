@@ -17,6 +17,6 @@ If you want to modify the output nevertheless, change the TypoScript used by def
 
    tt_content.list.20.riddle_riddle = USER
    tt_content.list.20.riddle_riddle {
-       userFunc = StudioMitte\Riddle\Plugin\RiddlePlugin->run
+       userFunc = StudioMitte\Riddle\Controller\PluginController->run
    }
 

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace StudioMitte\Riddle\Plugin;
+namespace StudioMitte\Riddle\Controller;
 
 /**
  * This file is part of the "riddle" Extension for TYPO3 CMS.
@@ -16,7 +16,7 @@ use StudioMitte\Riddle\Utility\RiddleUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
-class RiddlePlugin extends ContentObjectRenderer
+class PluginController extends ContentObjectRenderer
 {
 
     /** @var ContentObjectRenderer */

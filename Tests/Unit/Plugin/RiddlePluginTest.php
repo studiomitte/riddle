@@ -13,7 +13,7 @@ namespace StudioMitte\Riddle\Tests\Unit\Plugin;
 
 use Prophecy\Argument;
 use StudioMitte\Riddle\Api\RiddleApi;
-use StudioMitte\Riddle\Plugin\RiddlePlugin;
+use StudioMitte\Riddle\Plugin\PluginController;
 use TYPO3\CMS\Core\Cache\CacheManager;
 use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -53,7 +53,7 @@ class RiddlePluginTest extends BaseTestCase
     </data>
 </T3FlexForms>'
         ]);
-        $mockedProvider = $this->getAccessibleMock(RiddlePlugin::class, ['getRiddleHtml'], [], '', false);
+        $mockedProvider = $this->getAccessibleMock(PluginController::class, ['getRiddleHtml'], [], '', false);
         $mockedProvider->_set('cObj', $mockedContentObjectRenderer);
         if ($html) {
             $mockedProvider->expects(self::once())->method('getRiddleHtml')->with($id)->willReturn($html);
@@ -86,7 +86,7 @@ class RiddlePluginTest extends BaseTestCase
         $riddleApiProphecy->getEmbedCode(123)->willReturn($response);
         GeneralUtility::addInstance(RiddleApi::class, $riddleApiProphecy->reveal());
 
-        $mockedRiddleApi = $this->getAccessibleMock(RiddlePlugin::class, ['dummy'], [], '', false);
+        $mockedRiddleApi = $this->getAccessibleMock(PluginController::class, ['dummy'], [], '', false);
         self::assertEquals('some html', $mockedRiddleApi->_call('getRiddleHtml', 123));
     }
 }
