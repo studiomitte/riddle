@@ -24,7 +24,11 @@ class PluginController extends ContentObjectRenderer
 
     public function run(): string
     {
-        $riddleId = RiddleUtility::getRiddleId($this->cObj->data['pi_flexform']);
+        $flexforms = (string)$this->cObj->data['pi_flexform'];
+        if (!$flexforms) {
+            return '';
+        }
+        $riddleId = RiddleUtility::getRiddleId($flexforms);
         if (!$riddleId) {
             return '';
         }

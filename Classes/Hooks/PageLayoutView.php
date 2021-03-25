@@ -30,7 +30,7 @@ class PageLayoutView
      */
     public function getExtensionSummary(array $params): string
     {
-        $riddleId = RiddleUtility::getRiddleId($params['row']['pi_flexform']);
+        $riddleId = RiddleUtility::getRiddleId((string)$params['row']['pi_flexform']);
 
         $standaloneView = $this->getView();
         try {
