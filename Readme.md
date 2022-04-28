@@ -43,3 +43,11 @@ tt_content.list.20.riddle_riddle {
 ```
 
 If you want to adopt the rendering, override the `userFunc` and provide a custom entrypoint.
+
+
+## Credits
+
+This extension was created by Georg Ringer for [Studio Mitte, Linz](https://studiomitte.com) with ♥.
+
+[Find more TYPO3 extensions we have developed](https://www.studiomitte.com/loesungen/typo3) that provide additional features for TYPO3 sites. 
+
