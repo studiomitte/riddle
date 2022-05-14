@@ -24,15 +24,15 @@
         "GPL-2.0-or-later"
     ],
     "require": {
-        "typo3/cms-backend": "^9 || ^10",
-        "typo3/cms-core": "^9 || ^10",
-        "typo3/cms-frontend": "^9 || ^10",
-        "typo3/cms-fluid": "^9 || ^10"
+        "typo3/cms-backend": "^10.4 || ^11.5",
+        "typo3/cms-core": "^10.4 || ^11.5",
+        "typo3/cms-frontend": "^10.4 || ^11.5",
+        "typo3/cms-fluid": "^10.4 || ^11.5"
     },
     "require-dev": {
         "phpspec/prophecy-phpunit": "^1",
         "typo3/testing-framework": "^6.4 || ^4 || ^5",
-	"phpunit/phpunit": "^8 || ^7",
+        "phpunit/phpunit": "^8 || ^7",
         "friendsofphp/php-cs-fixer": "^2.16"
     },
     "autoload": {
