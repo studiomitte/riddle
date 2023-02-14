@@ -13,14 +13,15 @@ namespace StudioMitte\Riddle\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\ClientInterface;
-use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\HandlerStack;
 use StudioMitte\Riddle\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\StringUtility;
 
 class RiddleApi
 {
     private const ENDPOINT = 'https://www.riddle.com/api/v2/';
+    private const ENDPOINTV2 = 'https://www.riddle.com/creator/v2/api/';
 
     /** @var ExtensionConfiguration */
     protected $extensionConfiguration;
@@ -32,7 +33,18 @@ class RiddleApi
 
     public function getRiddleList(): array
     {
+        if (!$this->extensionConfiguration->isV1Enabled()) {
+            return [];
+        }
         return $this->request('riddle/get/list');
+    }
+
+    public function getRiddleListV2(): array
+    {
+        if (!$this->extensionConfiguration->isV2Enabled()) {
+            return [];
+        }
+        return $this->request('riddle/list', 'POST', true);
     }
 
     public function getRiddleItem(int $id): array
@@ -46,36 +58,55 @@ class RiddleApi
         return [];
     }
 
+    public function getRiddleItemV2(string $id): array
+    {
+        $data = $this->request('riddle/' . $id, 'GET', true);
+        return $data['data'] ?? [];
+    }
+
     public function getEmbedCode(int $id): ?array
     {
         return $this->request('riddle/get/embed-code?riddleId=' . $id);
     }
 
-    /**
-     * @param string $action
-     * @param array $options
-     * @param string $method
-     * @return array
-     * @throws GuzzleException
-     */
-    protected function request(string $action, $method = 'GET'): array
+    public function getEmbedCodeV2(string $id): string
     {
-        $uri = self::ENDPOINT . trim($action, '/');
+        return (string)$this->request('riddle/embed-code/' . $id, 'GET', true);
+    }
+
+    /**
+     * @return array|string
+     */
+    protected function request(string $action, $method = 'GET', $isV2 = false)
+    {
         $client = $this->getClient();
         $headers = [
-            'Authorization' => 'Bearer ' . $this->extensionConfiguration->getApiToken(),
-            'Key' => $this->extensionConfiguration->getApiKey(),
             'Accept' => 'application/json',
         ];
+        if ($isV2) {
+            $uri = self::ENDPOINTV2 . trim($action, '/');
+            $headers['X-RIDDLE-BEARER'] = 'Bearer ' . $this->extensionConfiguration->getApiTokenV2();
+        } else {
+            $uri = self::ENDPOINT . trim($action, '/');
+            $headers['Authorization'] = 'Bearer ' . $this->extensionConfiguration->getApiToken();
+            $headers['Key'] = $this->extensionConfiguration->getApiKey();
+        }
+
         $options['headers'] = $headers;
         $response = $client->request($method, $uri, $options);
 
         if ($response->getStatusCode() === 200) {
+            if ($isV2 && StringUtility::beginsWith($action, 'riddle/embed-code')) {
+                return $response->getBody()->getContents();
+            } else {
+                return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+            }
             return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         }
 
         throw new \UnexpectedValueException('Error for riddle request: ' . $response->getStatusCode(), 1597956586);
     }
+
 
     /**
      * Creates the client to do requests

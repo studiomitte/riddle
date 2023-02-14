@@ -25,6 +25,18 @@ class RiddleUtility
      */
     public static function enrichRiddleData(array $item): array
     {
+        if (isset($item['created']) && is_array($item['created'])) {
+            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $item['created']['at']);
+            if ($date) {
+                $item['_enriched']['dateCreated'] = $date->getTimestamp();
+            }
+            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $item['modified']['at']);
+            if ($date) {
+                $item['_enriched']['datepublished'] = $date->getTimestamp();
+            }
+            return $item;
+        }
+
         foreach (['dateCreated', 'datepublished'] as $dateField) {
             if (isset($item[$dateField])) {
                 $date = \DateTime::createFromFormat('Y-m-d H:i:s', $item[$dateField]);
@@ -41,14 +53,14 @@ class RiddleUtility
      * Get riddle ID from given flexform XML
      *
      * @param string $flexforms
-     * @return int
+     * @return int|string
      */
-    public static function getRiddleId(string $flexforms): int
+    public static function getRiddleId(string $flexforms)
     {
         if (!$flexforms) {
-            return 0;
+            return '';
         }
         $data = GeneralUtility::makeInstance(FlexFormService::class)->convertFlexFormContentToArray($flexforms);
-        return (int)($data['riddle'] ?? 0);
+        return ($data['riddle'] ?? '');
     }
 }

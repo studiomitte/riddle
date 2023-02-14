@@ -11,18 +11,15 @@ namespace StudioMitte\Riddle;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use StudioMitte\Riddle\Exception\ApiConfigurationMissingException;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ExtensionConfiguration implements SingletonInterface
 {
 
-    /** @var string */
-    protected $apiKey = '';
-
-    /** @var string */
-    protected $apiToken = '';
+    protected string $apiKey = '';
+    protected string $apiToken = '';
+    protected string $apiTokenV2 = '';
 
     public function __construct()
     {
@@ -32,28 +29,35 @@ class ExtensionConfiguration implements SingletonInterface
             if (is_array($configuration)) {
                 $this->apiKey = (string)($configuration['apiKey'] ?? '');
                 $this->apiToken = (string)($configuration['apiToken'] ?? '');
+                $this->apiTokenV2 = (string)($configuration['apiTokenV2'] ?? '');
             }
         } catch (\Exception $e) {
         }
-
-        if (!$this->apiToken && !$this->apiKey) {
-            throw new ApiConfigurationMissingException('API not configured', 1598035744);
-        }
     }
 
-    /**
-     * @return string
-     */
     public function getApiKey(): string
     {
         return $this->apiKey;
     }
 
-    /**
-     * @return string
-     */
     public function getApiToken(): string
     {
         return $this->apiToken;
     }
+
+    public function getApiTokenV2(): string
+    {
+        return $this->apiTokenV2;
+    }
+
+    public function isV1Enabled(): bool
+    {
+        return $this->apiKey && $this->apiToken;
+    }
+
+    public function isV2Enabled(): bool
+    {
+        return (bool)$this->apiTokenV2;
+    }
+
 }

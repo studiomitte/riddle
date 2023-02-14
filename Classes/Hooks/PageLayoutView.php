@@ -14,6 +14,7 @@ use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Exception\ApiConfigurationMissingException;
 use StudioMitte\Riddle\Utility\RiddleUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
 class PageLayoutView
@@ -36,7 +37,8 @@ class PageLayoutView
         try {
             $standaloneView->assignMultiple([
                 'riddleId' => $riddleId,
-                'riddle' => $this->getRiddleData($riddleId)
+                'riddle' => $this->getRiddleData($riddleId),
+                'riddleV2' => !MathUtility::canBeInterpretedAsInteger($riddleId)
             ]);
         } catch (ApiConfigurationMissingException $exception) {
             $standaloneView->assign('apiNotConfigured', true);
@@ -55,9 +57,18 @@ class PageLayoutView
         return $standaloneView;
     }
 
-    protected function getRiddleData(int $id): array
+    /**
+     * @param string|int $id
+     * @return array
+     */
+    protected function getRiddleData($id): array
     {
-        $item = GeneralUtility::makeInstance(RiddleApi::class)->getRiddleItem($id);
+        $api = GeneralUtility::makeInstance(RiddleApi::class);
+        if (MathUtility::canBeInterpretedAsInteger($id)) {
+            $item = $api->getRiddleItem($id);
+        } else {
+            $item = $api->getRiddleItemV2($id);
+        }
         return RiddleUtility::enrichRiddleData($item);
     }
 }

@@ -6,14 +6,14 @@ $EM_CONF[$_EXTKEY] = [
     'author' => 'Georg Ringer',
     'author_email' => 'gr@studiomitte.com',
     'author_company' => 'studiomitte.com',
-    'state' => 'beta',
+    'state' => 'stable',
     'clearCacheOnLoad' => true,
-    'version' => '1.1.0',
+    'version' => '1.2.0',
     'constraints' =>
         [
             'depends' =>
                 [
-                    'typo3' => '10.4.99-11.5.99'
+                    'typo3' => '9.5.0-11.5.99'
                 ],
         ],
     'autoload' =>

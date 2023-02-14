@@ -6,3 +6,6 @@ apiKey =
 
 # cat=enable/10; type=string; label=API token
 apiToken =
+
+# cat=enable/10; type=string; label=API token v2
+apiTokenV2 =

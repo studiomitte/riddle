@@ -14,6 +14,7 @@ namespace StudioMitte\Riddle\Controller;
 use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Utility\RiddleUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class PluginController extends ContentObjectRenderer
@@ -33,12 +34,20 @@ class PluginController extends ContentObjectRenderer
             return '';
         }
 
-        return $this->getRiddleHtml($riddleId);
+        if (MathUtility::canBeInterpretedAsInteger($riddleId)) {
+            return $this->getRiddleHtml($riddleId);
+        }
+        return $this->getRiddleHtmlV2($riddleId);
     }
 
     protected function getRiddleHtml(int $id): string
     {
         $response = GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCode($id);
         return (string)($response['response'] ?? '');
+    }
+
+    protected function getRiddleHtmlV2(string $id): string
+    {
+        return GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCodeV2($id);
     }
 }

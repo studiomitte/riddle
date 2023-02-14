@@ -8,7 +8,7 @@
         <f:if condition="{riddle}">
             <f:then>
                 <h3>{riddle.title}</h3>
-                        <img src="{riddle.thumb}" class="img-responsive" alt="{riddle.title}"/>
+                        <img src="{f:if(condition: riddleV2, then:riddle.image, else: riddle.thumb)}" class="img-responsive" alt="{riddle.title}" style="max-width: 600px;max-height: 400px"/>
                         <table class="table table-condensed table-striped table-hover">
                             <thead>
                                 <tr>
@@ -18,7 +18,7 @@
                             <tbody>
                             <tr>
                                 <th>{f:translate(key:'{lll}riddle.id')}</th>
-                                <td>{riddle.id}</td>
+                                <td>{f:if(condition: riddleV2, then:riddle.UUID, else: riddle.id)}</td>
                             </tr>
                             <tr>
                                 <th>{f:translate(key:'{lll}riddle.type')}</th>
@@ -28,13 +28,13 @@
                                 <th>{f:translate(key:'{lll}riddle.created')}</th>
                                 <td>
                                     {riddle._enriched.dateCreated -> f:format.date(format:dateTime)}<br>
-                                    <f:render section="user" arguments="{user:riddle.userCreated}"/>
+                                    <f:render section="user" arguments="{user:riddle.userCreated,riddleV2:riddleV2,by:riddle.created.by}"/>
                                 </td>
                             </tr>
                             <tr>
                                 <th>{f:translate(key:'{lll}riddle.published')}</th>
                                 <td>{riddle._enriched.datepublished -> f:format.date(format:dateTime)}<br>
-                                    <f:render section="user" arguments="{user:riddle.userPublished}"/>
+                                    <f:render section="user" arguments="{user:riddle.userPublished,riddleV2:riddleV2,by:riddle.published.by}"/>
                                 </td>
                             </tr>
                             <f:if condition="{riddle.tags}">
@@ -53,14 +53,29 @@
                         </table>
 
                 <div class="btn-toolbar" style="margin-top:10px">
-                    <a class="btn btn-default" target="_blank" rel="noopener" href="https://www.riddle.com/view/{riddle.id}">
-                        <core:icon identifier="actions-document-view" size="small"/>
-                        {f:translate(key:'{lll}link.open')}
-                    </a>
-                    <a class="btn btn-default" target="_blank" rel="noopener" href="https://www.riddle.com/creator/app/riddle/{riddle.id}#/edit/create/{riddle.id}">
-                        <core:icon identifier="actions-open" size="small"/>
-                        {f:translate(key:'{lll}link.edit')}
-                    </a>
+                    <f:if condition="{riddleV2}">
+                        <f:then>
+                            <a class="btn btn-default" target="_blank" rel="noopener" href="https://www.riddle.com/view/{riddle.UUID}">
+                                <core:icon identifier="actions-document-view" size="small"/>
+                                {f:translate(key:'{lll}link.open')}
+                            </a>
+                            <a class="btn btn-default" target="_blank" rel="noopener" href="https://www.riddle.com/creator/v2/app/riddle#/creator/{riddle.UUID}/create/">
+                                <core:icon identifier="actions-open" size="small"/>
+                                {f:translate(key:'{lll}link.edit')}
+                            </a>
+                        </f:then>
+                        <f:else>
+                            <a class="btn btn-default" target="_blank" rel="noopener" href="https://www.riddle.com/view/{riddle.id}">
+                                <core:icon identifier="actions-document-view" size="small"/>
+                                {f:translate(key:'{lll}link.open')}
+                            </a>
+                            <a class="btn btn-default" target="_blank" rel="noopener" href="https://www.riddle.com/creator/app/riddle/{riddle.id}#/edit/create/{riddle.id}">
+                                <core:icon identifier="actions-open" size="small"/>
+                                {f:translate(key:'{lll}link.edit')}
+                            </a>
+                        </f:else>
+                    </f:if>
+
                 </div>
             </f:then>
             <f:else>
@@ -83,6 +98,10 @@
 </f:if>
 
 <f:section name="user">
-    <span title="{user.id}">{user.name}</span> (<a href="mailto:{user.email}">{user.email}</a>)
+    <f:if condition="{riddle2}">
+        <f:then> <span title="{user.id}">{user.name}</span> (<a href="mailto:{user.email}">{user.email}</a>)</f:then>
+        <f:else> <span>{by}</span></f:else>
+    </f:if>
+
 </f:section>
 </html>
