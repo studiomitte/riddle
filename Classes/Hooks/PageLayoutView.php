@@ -65,7 +65,7 @@ class PageLayoutView
     {
         $api = GeneralUtility::makeInstance(RiddleApi::class);
         if (MathUtility::canBeInterpretedAsInteger($id)) {
-            $item = $api->getRiddleItem($id);
+            $item = $api->getRiddleItem((int)$id);
         } else {
             $item = $api->getRiddleItemV2($id);
         }

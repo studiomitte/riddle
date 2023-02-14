@@ -53,7 +53,7 @@ class RiddleUtility
      * Get riddle ID from given flexform XML
      *
      * @param string $flexforms
-     * @return int|string
+     * @return string
      */
     public static function getRiddleId(string $flexforms)
     {

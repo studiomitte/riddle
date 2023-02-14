@@ -35,7 +35,7 @@ class PluginController extends ContentObjectRenderer
         }
 
         if (MathUtility::canBeInterpretedAsInteger($riddleId)) {
-            return $this->getRiddleHtml($riddleId);
+            return $this->getRiddleHtml((int)$riddleId);
         }
         return $this->getRiddleHtmlV2($riddleId);
     }
