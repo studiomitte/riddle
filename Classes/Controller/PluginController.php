@@ -14,17 +14,21 @@ namespace StudioMitte\Riddle\Controller;
 use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Utility\RiddleUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class PluginController extends ContentObjectRenderer
 {
+    protected ContentObjectRenderer $cObj;
 
-    /** @var ContentObjectRenderer */
-    protected $cObj;
+    public function __construct() {
+        $this->cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+    }
 
     public function run(): string
     {
+        DebugUtility::debug($this->data);
         $flexforms = (string)$this->cObj->data['pi_flexform'];
         if (!$flexforms) {
             return '';
@@ -34,10 +38,7 @@ class PluginController extends ContentObjectRenderer
             return '';
         }
 
-        if (MathUtility::canBeInterpretedAsInteger($riddleId)) {
-            return $this->getRiddleHtml((int)$riddleId);
-        }
-        return $this->getRiddleHtmlV2($riddleId);
+        return $this->getRiddleHtml($riddleId);
     }
 
     protected function getRiddleHtml(int $id): string
@@ -46,8 +47,4 @@ class PluginController extends ContentObjectRenderer
         return (string)($response['response'] ?? '');
     }
 
-    protected function getRiddleHtmlV2(string $id): string
-    {
-        return GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCodeV2($id);
-    }
 }

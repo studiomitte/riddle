@@ -26,14 +26,6 @@ class ItemsProcFunc
     public function riddleList(array &$config): void
     {
         try {
-            $riddles2 = $this->getAllRiddlesV2();
-            if ($riddles2) {
-                $config['items'][] = ['V2', '--div--'];
-            }
-            foreach ($riddles2 as $item) {
-                $config['items'][] = $this->getSelectItem($item);
-            }
-
             $riddles = $this->getAllRiddles();
             if ($riddles) {
                 $config['items'][] = ['V1', '--div--'];
@@ -58,23 +50,12 @@ class ItemsProcFunc
 
     protected function getSelectItem(array $item, bool $isV2 = true): array
     {
-        if ($isV2) {
-            $item = RiddleUtility::enrichRiddleData($item);
-            $date = $item['_enriched']['datepublished'] ? BackendUtility::date($item['_enriched']['datepublished']) : $item['created']['at'] ?? '';
-            return [
-                sprintf('%s [%s] - %s', $item['title'], $item['type'] ?? '-', $date),
-                $item['UUID'],
-                $item['image'] ?? '',
-            ];
-        }
-
         $item = RiddleUtility::enrichRiddleData($item);
-
-        $date = $item['_enriched']['datepublished'] ? BackendUtility::date($item['_enriched']['datepublished']) : $item['datepublished'];
+        $date = $item['_enriched']['datepublished'] ? BackendUtility::date($item['_enriched']['datepublished']) : $item['created']['at'] ?? '';
         return [
             sprintf('%s [%s] - %s', $item['title'], $item['type'] ?? '-', $date),
-            $item['id'],
-            $item['thumb'] ?? '',
+            $item['UUID'],
+            $item['image'] ?? '',
         ];
     }
 
@@ -86,11 +67,4 @@ class ItemsProcFunc
         return $response['response']['items'] ?? [];
     }
 
-    protected function getAllRiddlesV2(): array
-    {
-        $api = GeneralUtility::makeInstance(RiddleApi::class);
-        $response = $api->getRiddleListV2();
-
-        return $response['data'] ?? [];
-    }
 }
