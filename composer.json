@@ -24,10 +24,10 @@
 		"GPL-2.0-or-later"
 	],
 	"require": {
-		"typo3/cms-backend": "^9 || ^10 || ^11",
-		"typo3/cms-core": "^9 || ^10 || ^11",
-		"typo3/cms-frontend": "^9 || ^10 || ^11",
-		"typo3/cms-fluid": "^9 || ^10 || ^11"
+		"typo3/cms-backend": "^9 || ^10 || ^11 || ^12",
+		"typo3/cms-core": "^9 || ^10 || ^11 || ^12",
+		"typo3/cms-frontend": "^9 || ^10 || ^11 || ^12",
+		"typo3/cms-fluid": "^9 || ^10 || ^11 || ^12"
 	},
 	"require-dev": {
 		"phpspec/prophecy-phpunit": "^1",
