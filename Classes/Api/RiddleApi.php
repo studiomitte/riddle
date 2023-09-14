@@ -96,7 +96,7 @@ class RiddleApi
         $response = $client->request($method, $uri, $options);
 
         if ($response->getStatusCode() === 200) {
-            if ($isV2 && StringUtility::beginsWith($action, 'riddle/embed-code')) {
+            if ($isV2 && \str_starts_with($action, 'riddle/embed-code')) {
                 return $response->getBody()->getContents();
             } else {
                 return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);

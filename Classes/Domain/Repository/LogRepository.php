@@ -98,9 +98,7 @@ class LogRepository
 
             $rows = $queryBuilder
                 ->select($field)
-                ->from(self::TABLE)
-                ->groupBy($field)
-                ->execute()
+                ->from(self::TABLE)->groupBy($field)->executeQuery()
                 ->fetchAll();
 
             foreach ($rows as $row) {

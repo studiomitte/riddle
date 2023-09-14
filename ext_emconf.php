@@ -7,7 +7,6 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 'gr@studiomitte.com',
     'author_company' => 'studiomitte.com',
     'state' => 'stable',
-    'clearCacheOnLoad' => true,
     'version' => '1.2.0',
     'constraints' =>
         [
