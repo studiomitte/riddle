@@ -32,15 +32,15 @@ class ExternalIcons extends AbstractNode
         $selectItems = $parameterArray['fieldConf']['config']['items'];
         $selectItemCounter = 0;
         foreach ($selectItems as $item) {
-            if ($item[1] === '--div--') {
+            if ($item['value'] === '--div--') {
                 continue;
             }
-            $icon = $item[2] ?? '';
+            $icon = $item['icon'] ?? '';
             if ($icon) {
                 $fieldValue = $this->data['databaseRow'][$this->data['fieldName']];
                 $selectIcons[] = [
-                    'title' => $item[0],
-                    'active' => ($fieldValue[0] === (string)$item[1]) ? true : false,
+                    'title' => $item['label'],
+                    'active' => ($fieldValue[0] === (string)$item['value']) ? true : false,
                     'icon' => $icon,
                     'index' => $selectItemCounter,
                 ];
