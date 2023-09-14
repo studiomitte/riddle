@@ -12,6 +12,7 @@ namespace StudioMitte\Riddle\Backend\FieldWizard;
  */
 
 use TYPO3\CMS\Backend\Form\AbstractNode;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 
 /**
  * Render external thumbnails
@@ -32,15 +33,15 @@ class ExternalIcons extends AbstractNode
         $selectItems = $parameterArray['fieldConf']['config']['items'];
         $selectItemCounter = 0;
         foreach ($selectItems as $item) {
-            if ($item['value'] === '--div--') {
+            if ($item['value'] === '') {
                 continue;
             }
             $icon = $item['icon'] ?? '';
             if ($icon) {
-                $fieldValue = $this->data['databaseRow'][$this->data['fieldName']];
+                $fieldValue = $this->data['databaseRow'][$this->data['fieldName']]['data']['sDEF']['lDEF']['riddle']['vDEF'][0] ?? '';
                 $selectIcons[] = [
                     'title' => $item['label'],
-                    'active' => ($fieldValue[0] === (string)$item['value']) ? true : false,
+                    'active' => ($fieldValue === (string)$item['value']) ? true : false,
                     'icon' => $icon,
                     'index' => $selectItemCounter,
                 ];

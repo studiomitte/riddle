@@ -17,6 +17,7 @@ use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\DebugUtility;
 
 /**
  * Render list of all riddles
@@ -27,9 +28,6 @@ class ItemsProcFunc
     {
         try {
             $riddles = $this->getAllRiddles();
-            if ($riddles) {
-                $config['items'][] = ['V1', '--div--'];
-            }
             foreach ($riddles as $item) {
                 $config['items'][] = $this->getSelectItem($item, false);
             }
@@ -62,9 +60,7 @@ class ItemsProcFunc
     protected function getAllRiddles(): array
     {
         $api = GeneralUtility::makeInstance(RiddleApi::class);
-        $response = $api->getRiddleList();
-
-        return $response['response']['items'] ?? [];
+        return $api->getRiddleList();
     }
 
 }
