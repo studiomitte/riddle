@@ -29,21 +29,20 @@ class ExtensionConfigurationTest extends BaseTestCase
      * @param mixed $expectedKey
      * @param mixed $expectedToken
      */
-    public function configurationCanBeRetrieved(array $configuration, $expectedKey, $expectedToken): void
+    public function configurationCanBeRetrieved(array $configuration, $expectedKey): void
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['riddle'] = $configuration;
 
         $configuration = new ExtensionConfiguration();
 
         self::assertEquals($expectedKey, $configuration->getApiKey());
-        self::assertEquals($expectedToken, $configuration->getApiToken());
     }
 
     public function configurationCanBeRetrievedDataProvider(): array
     {
         return [
             'working api' => [
-                ['apiKey' => '123', 'apiToken' => 456], 123, 456
+                ['apiKey' => '123'], 123
             ]
         ];
     }
