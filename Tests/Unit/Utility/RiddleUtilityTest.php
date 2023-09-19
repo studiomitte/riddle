@@ -69,7 +69,7 @@ class RiddleUtilityTest extends BaseTestCase
      * @param int $expectedId
      * @param string $flexforms
      */
-    public function idCanBeRetrievedFromFlexforms(int $expectedId, string $flexforms): void
+    public function idCanBeRetrievedFromFlexforms(string $expectedId, string $flexforms): void
     {
         $cacheFrontendProphecy = $this->prophesize(PhpFrontend::class);
         $cacheFrontendProphecy->require(Argument::any())->willReturn(false);
@@ -86,7 +86,7 @@ class RiddleUtilityTest extends BaseTestCase
     {
         return [
             'working flexform' => [
-                264528,
+                '264528',
                 '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
@@ -101,7 +101,7 @@ class RiddleUtilityTest extends BaseTestCase
 </T3FlexForms>'
             ],
             'non working flexform' => [
-                0,
+                '',
                 '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
@@ -116,7 +116,7 @@ class RiddleUtilityTest extends BaseTestCase
 </T3FlexForms>'
             ],
             'empty flexform' => [
-                0,
+                '',
                 ''
             ]
         ];
