@@ -30,10 +30,10 @@
 		"typo3/cms-fluid": "^11 || ^12"
 	},
 	"require-dev": {
-		"phpspec/prophecy-phpunit": "^1",
-		"typo3/testing-framework": "^6.4 || ^4 || ^5",
-		"phpunit/phpunit": "^8 || ^7",
-		"friendsofphp/php-cs-fixer": "^2.16"
+		"phpspec/prophecy-phpunit": "^2",
+		"typo3/testing-framework": "^7 || ^8",
+		"phpunit/phpunit": "^10",
+		"friendsofphp/php-cs-fixer": "^3.27"
 	},
 	"autoload": {
 		"psr-4": {
