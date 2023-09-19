@@ -22,10 +22,10 @@
                                     </numIndex>
                                 </items>
                                 <fieldWizard>
-                                    <externalIcons>
+                                    <selectIcons>
                                         <renderType>ExternalIcons</renderType>
                                         <disabled>0</disabled>
-                                    </externalIcons>
+                                    </selectIcons>
                                 </fieldWizard>
                             </config>
                         </TCEforms>
