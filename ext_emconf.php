@@ -7,12 +7,12 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 'gr@studiomitte.com',
     'author_company' => 'studiomitte.com',
     'state' => 'stable',
-    'version' => '1.2.0',
+    'version' => '2.0.0',
     'constraints' =>
         [
             'depends' =>
                 [
-                    'typo3' => '9.5.0-12.4.99'
+                    'typo3' => '11.5.0-12.4.99'
                 ],
         ],
     'autoload' =>
