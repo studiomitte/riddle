@@ -5,3 +5,8 @@ services:
 
   StudioMitte\Riddle\:
     resource: '../Classes/*'
+
+  StudioMitte\Riddle\Backend\EventListener\BackendPreviewEventListener:
+    tags:
+      - name: event.listener
+        identifier: 'riddle/riddle'

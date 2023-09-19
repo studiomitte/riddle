@@ -16,7 +16,6 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
 use StudioMitte\Riddle\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 class RiddleApi
 {
@@ -37,8 +36,7 @@ class RiddleApi
 
     public function getRiddleItem(string $id): array
     {
-        $all = $this->getRiddleList();
-        foreach ($all['response'] as $item) {
+        foreach ($this->getRiddleList() as $item) {
             if ($item['UUID'] === $id) {
                 return $item;
             }
