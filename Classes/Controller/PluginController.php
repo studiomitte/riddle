@@ -22,13 +22,13 @@ class PluginController extends ContentObjectRenderer
 {
     protected ContentObjectRenderer $cObj;
 
-    public function __construct() {
-        $this->cObj = GeneralUtility::makeInstance(ContentObjectRenderer::class);
+    public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
+    {
+        $this->cObj = $cObj;
     }
 
     public function run(): string
     {
-        DebugUtility::debug($this->data);
         $flexforms = (string)$this->cObj->data['pi_flexform'];
         if (!$flexforms) {
             return '';
@@ -41,10 +41,9 @@ class PluginController extends ContentObjectRenderer
         return $this->getRiddleHtml($riddleId);
     }
 
-    protected function getRiddleHtml(int $id): string
+    protected function getRiddleHtml(string $id): string
     {
-        $response = GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCode($id);
-        return (string)($response['response'] ?? '');
+        return GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCode($id);
     }
 
 }

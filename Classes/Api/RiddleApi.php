@@ -16,7 +16,6 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
 use StudioMitte\Riddle\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\DebugUtility;
 use TYPO3\CMS\Core\Utility\StringUtility;
 
 class RiddleApi
@@ -36,20 +35,20 @@ class RiddleApi
         return $this->request('riddle/list');
     }
 
-    public function getRiddleItem(int $id): array
+    public function getRiddleItem(string $id): array
     {
         $all = $this->getRiddleList();
         foreach ($all['response'] as $item) {
-            if ((int)$item['UUID'] === $id) {
+            if ($item['UUID'] === $id) {
                 return $item;
             }
         }
         return [];
     }
 
-    public function getEmbedCode(int $id): ?array
+    public function getEmbedCode(string $id): ?string
     {
-        return $this->request('riddle/embed-code/' . $id);
+        return $this->request('riddle/embed-code/' . $id, 'GET');
     }
 
     /**
