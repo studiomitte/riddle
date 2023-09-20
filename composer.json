@@ -36,7 +36,8 @@
 		"phpunit/phpunit": "^9",
 		"typo3/coding-standards": "^0.5.3",
 		"friendsofphp/php-cs-fixer": "^3.13.0",
-		"webmozart/assert": "^1.11.0"
+		"webmozart/assert": "^1.11.0",
+		"phpspec/prophecy": "^1.17"
 	},
 	"autoload": {
 		"psr-4": {

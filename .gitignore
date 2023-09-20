@@ -5,3 +5,4 @@ Todos.md
 Build/.phpunit.result.cache
 composer.lock
 /.php-cs-fixer.cache
+/var

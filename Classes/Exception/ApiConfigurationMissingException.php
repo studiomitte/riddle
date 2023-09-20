@@ -12,5 +12,4 @@ namespace StudioMitte\Riddle\Exception;
  */
 class ApiConfigurationMissingException extends \RuntimeException
 {
-
 }
