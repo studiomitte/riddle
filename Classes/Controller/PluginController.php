@@ -19,9 +19,12 @@ use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class PluginController extends ContentObjectRenderer
 {
+    protected ContentObjectRenderer $cObj;
 
-    /** @var ContentObjectRenderer */
-    protected $cObj;
+    public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
+    {
+        $this->cObj = $cObj;
+    }
 
     public function run(): string
     {
@@ -34,20 +37,12 @@ class PluginController extends ContentObjectRenderer
             return '';
         }
 
-        if (MathUtility::canBeInterpretedAsInteger($riddleId)) {
-            return $this->getRiddleHtml((int)$riddleId);
-        }
-        return $this->getRiddleHtmlV2($riddleId);
+        return $this->getRiddleHtml($riddleId);
     }
 
-    protected function getRiddleHtml(int $id): string
+    protected function getRiddleHtml(string $id): string
     {
-        $response = GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCode($id);
-        return (string)($response['response'] ?? '');
+        return GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCode($id);
     }
 
-    protected function getRiddleHtmlV2(string $id): string
-    {
-        return GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCodeV2($id);
-    }
 }

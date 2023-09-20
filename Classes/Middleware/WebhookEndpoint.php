@@ -31,7 +31,7 @@ class WebhookEndpoint implements MiddlewareInterface
         RequestHandlerInterface $handler
     ): ResponseInterface
     {
-        if (!StringUtility::beginsWith($request->getUri()->getPath(), self::ENDPOINT)) {
+        if (!\str_starts_with($request->getUri()->getPath(), self::ENDPOINT)) {
             return $handler->handle($request);
         }
         $json = $request->getParsedBody()['data'] ?? '';

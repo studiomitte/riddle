@@ -5,7 +5,6 @@ return [
         'title' => 'LLL:EXT:plain_faq/Resources/Private/Language/locallang_db.xlf:tx_plainfaq_domain_model_faq',
         'label' => 'uid',
         'crdate' => 'crdate',
-        'cruser_id' => 'cruser_id',
         'sortby' => 'sorting',
         'searchFields' => 'question,answer,keywords,images,files',
         'typeicon_classes' => [

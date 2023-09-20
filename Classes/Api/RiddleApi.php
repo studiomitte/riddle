@@ -16,12 +16,10 @@ use GuzzleHttp\ClientInterface;
 use GuzzleHttp\HandlerStack;
 use StudioMitte\Riddle\ExtensionConfiguration;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 class RiddleApi
 {
-    private const ENDPOINT = 'https://www.riddle.com/api/v2/';
-    private const ENDPOINTV2 = 'https://www.riddle.com/creator/v2/api/';
+    private const ENDPOINT = 'https://www.riddle.com/api/v3/';
 
     /** @var ExtensionConfiguration */
     protected $extensionConfiguration;
@@ -33,75 +31,46 @@ class RiddleApi
 
     public function getRiddleList(): array
     {
-        if (!$this->extensionConfiguration->isV1Enabled()) {
-            return [];
-        }
-        return $this->request('riddle/get/list');
+        return $this->request('riddle/list');
     }
 
-    public function getRiddleListV2(): array
+    public function getRiddleItem(string $id): array
     {
-        if (!$this->extensionConfiguration->isV2Enabled()) {
-            return [];
-        }
-        return $this->request('riddle/list', 'POST', true);
-    }
-
-    public function getRiddleItem(int $id): array
-    {
-        $all = $this->getRiddleList();
-        foreach ($all['response']['items'] as $item) {
-            if ((int)$item['id'] === $id) {
+        foreach ($this->getRiddleList() as $item) {
+            if ($item['UUID'] === $id) {
                 return $item;
             }
         }
         return [];
     }
 
-    public function getRiddleItemV2(string $id): array
+    public function getEmbedCode(string $id): ?string
     {
-        $data = $this->request('riddle/' . $id, 'GET', true);
-        return $data['data'] ?? [];
-    }
-
-    public function getEmbedCode(int $id): ?array
-    {
-        return $this->request('riddle/get/embed-code?riddleId=' . $id);
-    }
-
-    public function getEmbedCodeV2(string $id): string
-    {
-        return (string)$this->request('riddle/embed-code/' . $id, 'GET', true);
+        return $this->request('riddle/embed-code/' . $id, 'GET');
     }
 
     /**
      * @return array|string
      */
-    protected function request(string $action, $method = 'GET', $isV2 = false)
+    protected function request(string $action, $method = 'POST')
     {
         $client = $this->getClient();
         $headers = [
             'Accept' => 'application/json',
         ];
-        if ($isV2) {
-            $uri = self::ENDPOINTV2 . trim($action, '/');
-            $headers['X-RIDDLE-BEARER'] = 'Bearer ' . $this->extensionConfiguration->getApiTokenV2();
-        } else {
-            $uri = self::ENDPOINT . trim($action, '/');
-            $headers['Authorization'] = 'Bearer ' . $this->extensionConfiguration->getApiToken();
-            $headers['Key'] = $this->extensionConfiguration->getApiKey();
-        }
+
+        $uri = self::ENDPOINT . trim($action, '/');
+        $headers['X-RIDDLE-BEARER'] = 'Bearer ' . $this->extensionConfiguration->getApiKey();
 
         $options['headers'] = $headers;
         $response = $client->request($method, $uri, $options);
 
         if ($response->getStatusCode() === 200) {
-            if ($isV2 && StringUtility::beginsWith($action, 'riddle/embed-code')) {
+            if (\str_starts_with($action, 'riddle/embed-code')) {
                 return $response->getBody()->getContents();
             } else {
-                return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
+                return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['data'];
             }
-            return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR);
         }
 
         throw new \UnexpectedValueException('Error for riddle request: ' . $response->getStatusCode(), 1597956586);

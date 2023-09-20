@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace StudioMitte\Riddle\Controller;
 
+use TYPO3\CMS\Core\Page\PageRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use StudioMitte\Riddle\Domain\Dto\LogDemand;
@@ -38,10 +39,10 @@ class ManagementController
     /** @var LogRepository */
     protected $logRepository;
 
-    public function __construct()
+    public function __construct(private PageRenderer $pageRenderer)
     {
         $this->moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
-        $this->moduleTemplate->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
+        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
         $this->getLanguageService()->includeLLFile('EXT:riddle/Resources/Private/Language/locallang.xlf');
         $this->logRepository = GeneralUtility::makeInstance(LogRepository::class);
     }

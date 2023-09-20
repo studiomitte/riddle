@@ -18,8 +18,6 @@ class ExtensionConfiguration implements SingletonInterface
 {
 
     protected string $apiKey = '';
-    protected string $apiToken = '';
-    protected string $apiTokenV2 = '';
 
     public function __construct()
     {
@@ -28,8 +26,6 @@ class ExtensionConfiguration implements SingletonInterface
 
             if (is_array($configuration)) {
                 $this->apiKey = (string)($configuration['apiKey'] ?? '');
-                $this->apiToken = (string)($configuration['apiToken'] ?? '');
-                $this->apiTokenV2 = (string)($configuration['apiTokenV2'] ?? '');
             }
         } catch (\Exception $e) {
         }
@@ -38,26 +34,6 @@ class ExtensionConfiguration implements SingletonInterface
     public function getApiKey(): string
     {
         return $this->apiKey;
-    }
-
-    public function getApiToken(): string
-    {
-        return $this->apiToken;
-    }
-
-    public function getApiTokenV2(): string
-    {
-        return $this->apiTokenV2;
-    }
-
-    public function isV1Enabled(): bool
-    {
-        return $this->apiKey && $this->apiToken;
-    }
-
-    public function isV2Enabled(): bool
-    {
-        return (bool)$this->apiTokenV2;
     }
 
 }
