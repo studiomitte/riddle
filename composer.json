@@ -24,16 +24,19 @@
 		"GPL-2.0-or-later"
 	],
 	"require": {
-		"typo3/cms-backend": "^11 || ^12",
-		"typo3/cms-core": "^11 || ^12",
-		"typo3/cms-frontend": "^11 || ^12",
-		"typo3/cms-fluid": "^11 || ^12"
+		"typo3/cms-backend": "^12",
+		"typo3/cms-core": "^12",
+		"typo3/cms-frontend": "^12",
+		"typo3/cms-fluid": "^12"
 	},
 	"require-dev": {
-		"phpspec/prophecy-phpunit": "^2",
-		"typo3/testing-framework": "^7 || ^8",
-		"phpunit/phpunit": "^10",
-		"friendsofphp/php-cs-fixer": "^3.27"
+		"typo3/cms-composer-installers": "^3.1.3 || 4.0.0-RC1 || ^5.0",
+		"typo3/testing-framework": "^7.0.1",
+		"typo3/cms-form": "^12.4.5",
+		"phpunit/phpunit": "^9",
+		"typo3/coding-standards": "^0.5.3",
+		"friendsofphp/php-cs-fixer": "^3.13.0",
+		"webmozart/assert": "^1.11.0"
 	},
 	"autoload": {
 		"psr-4": {
@@ -45,31 +48,27 @@
 			"StudioMitte\\Riddle\\Tests\\": "Tests"
 		}
 	},
-	"replace": {
-		"typo3-ter/riddle": "self.version"
-	},
 	"config": {
-		"bin-dir": ".build/bin",
-		"discard-changes": true,
-		"optimize-autoloader": true,
-		"vendor-dir": ".build/vendor"
-	},
-	"extra": {
-		"typo3/cms": {
-			"web-dir": ".build/web",
-			"app-dir": ".build",
-			"extension-key": "riddle"
+		"vendor-dir": ".Build/vendor",
+		"bin-dir": ".Build/bin",
+		"allow-plugins": {
+			"typo3/class-alias-loader": true,
+			"typo3/cms-composer-installers": true,
+			"sbuerk/typo3-cmscomposerinstallers-testingframework-bridge": true
 		}
 	},
 	"scripts": {
-		"php:fix": ".build/vendor/bin/php-cs-fixer --config=Build/.php_cs.php fix Classes Tests",
-		"ci:php:lint": "find *.php Classes Configuration Tests -name '*.php' -print0 | xargs -0 -n 1 -P 4 php -l",
-		"ci:php:fixer": "php-cs-fixer --diff -v fix",
-		"ci:tests:unit": "phpunit -c Build/UnitTests.xml",
-		"ci:tests:functional": "find 'Tests/Functional' -wholename '*Test.php' | parallel --gnu 'echo; echo \"Running functional test suite {}\"; php -d date.timezone=Europe/Berlin .build/vendor/bin/phpunit -c .build/vendor/nimut/testing-framework/res/Configuration/FunctionalTests.xml {}';",
+		"cs": "php ./.Build/bin/php-cs-fixer fix  --dry-run -v --config ./Build/php-cs-fixer/php-cs-fixer.php ./",
+		"csfix": "php ./.Build/bin/php-cs-fixer fix  -v --config ./Build/php-cs-fixer/php-cs-fixer.php ./",
 		"post-autoload-dump": [
-			"mkdir -p .build/web/typo3conf/ext/",
-			"[ -L .build/web/typo3conf/ext/riddle ] || ln -snvf ../../../../. .build/web/typo3conf/ext/riddle"
+			"TYPO3\\TestingFramework\\Composer\\ExtensionTestEnvironment::prepare"
 		]
+	},
+	"extra": {
+		"typo3/cms": {
+			"extension-key": "riddle",
+			"app-dir": ".Build",
+			"web-dir": ".Build/Web"
+		}
 	}
 }
