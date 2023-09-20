@@ -46,11 +46,13 @@ class SelectSingleElementWithNoIconTest extends BaseTestCase
                             [
                                 0 => 'label',
                                 1 => '--div--',
-                                'icon' => 'some-icon'],
+                                'icon' => 'some-icon',
+                            ],
                             [
                                 0 => 'label 2',
                                 1 => 'fo',
-                                2 => 'another-icon'],
+                                2 => 'another-icon',
+                            ],
                         ],
                     ],
                 ],

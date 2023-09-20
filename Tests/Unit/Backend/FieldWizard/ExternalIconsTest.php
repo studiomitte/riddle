@@ -39,11 +39,13 @@ class ExternalIconsTest extends BaseTestCase
                             [
                                 0 => 'label',
                                 1 => '--div--',
-                                'icon' => 'some-icon'],
+                                'icon' => 'some-icon',
+                            ],
                             [
                                 0 => 'label 2',
                                 1 => 'fo',
-                                2 => 'https://some-external.icon.com'],
+                                2 => 'https://some-external.icon.com',
+                            ],
                         ],
                     ],
                 ],
