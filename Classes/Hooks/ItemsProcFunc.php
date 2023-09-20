@@ -10,10 +10,10 @@ namespace StudioMitte\Riddle\Hooks;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Utility\RiddleUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -61,5 +61,4 @@ class ItemsProcFunc
         $api = GeneralUtility::makeInstance(RiddleApi::class);
         return $api->getRiddleList();
     }
-
 }

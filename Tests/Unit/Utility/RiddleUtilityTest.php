@@ -20,7 +20,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddleUtilityTest extends BaseTestCase
 {
-
     /**
      * @test
      * @dataProvider apiDataIsEnrichedDataProvider
@@ -46,9 +45,9 @@ class RiddleUtilityTest extends BaseTestCase
                     'datepublished' => '2020-09-21 19:21:07',
                     '_enriched' => [
                         'dateCreated' => 1598030467,
-                        'datepublished' => 1600708867
-                    ]
-                ]
+                        'datepublished' => 1600708867,
+                    ],
+                ],
             ],
             'invalid dates given' => [
                 [
@@ -58,8 +57,8 @@ class RiddleUtilityTest extends BaseTestCase
                 [
                     'dateCreated' => '08-21 19:21:07',
                     'datepublished' => '09-21 19:21:07',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -98,7 +97,7 @@ class RiddleUtilityTest extends BaseTestCase
             </language>
         </sheet>
     </data>
-</T3FlexForms>'
+</T3FlexForms>',
             ],
             'non working flexform' => [
                 '',
@@ -113,12 +112,12 @@ class RiddleUtilityTest extends BaseTestCase
             </language>
         </sheet>
     </data>
-</T3FlexForms>'
+</T3FlexForms>',
             ],
             'empty flexform' => [
                 '',
-                ''
-            ]
+                '',
+            ],
         ];
     }
 }

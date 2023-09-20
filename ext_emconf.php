@@ -1,4 +1,5 @@
 <?php
+
 $EM_CONF[$_EXTKEY] = [
     'title' => 'riddle.com Integration',
     'description' => 'Embed riddles from riddle.com',
@@ -12,7 +13,7 @@ $EM_CONF[$_EXTKEY] = [
         [
             'depends' =>
                 [
-                    'typo3' => '12.4.0-12.4.99'
+                    'typo3' => '12.4.0-12.4.99',
                 ],
         ],
     'autoload' =>
@@ -21,5 +22,5 @@ $EM_CONF[$_EXTKEY] = [
                 [
                     'StudioMitte\\Riddle\\' => 'Classes',
                 ],
-        ]
+        ],
 ];

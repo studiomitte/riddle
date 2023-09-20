@@ -8,7 +8,6 @@ use Psr\Http\Message\ServerRequestInterface;
 
 class LogDemand
 {
-
     /** @var string */
     protected $type = '';
 
@@ -50,7 +49,6 @@ class LogDemand
     {
         return $this->id;
     }
-
 
     /**
      * The current Page of the paginated redirects
@@ -107,8 +105,4 @@ class LogDemand
         $this->page = $page;
         return $this;
     }
-
-
-
-
 }

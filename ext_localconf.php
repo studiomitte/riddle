@@ -8,12 +8,12 @@ call_user_func(static function () {
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1598116730] = [
         'nodeName' => 'ExternalIcons',
         'priority' => 70,
-        'class' => \StudioMitte\Riddle\Backend\FieldWizard\ExternalIcons::class
+        'class' => \StudioMitte\Riddle\Backend\FieldWizard\ExternalIcons::class,
     ];
     $GLOBALS['TYPO3_CONF_VARS']['SYS']['formEngine']['nodeRegistry'][1598116731] = [
         'nodeName' => 'selectSingleWithNoIconPrefix',
         'priority' => 70,
-        'class' => \StudioMitte\Riddle\Backend\Element\SelectSingleElementWithNoIcon::class
+        'class' => \StudioMitte\Riddle\Backend\Element\SelectSingleElementWithNoIcon::class,
     ];
 
     $iconRegistry = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(\TYPO3\CMS\Core\Imaging\IconRegistry::class);
@@ -22,5 +22,4 @@ call_user_func(static function () {
         \TYPO3\CMS\Core\Imaging\IconProvider\BitmapIconProvider::class,
         ['source' => 'EXT:riddle/Resources/Public/Icons/Plugin.png']
     );
-
 });

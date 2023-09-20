@@ -14,7 +14,6 @@ namespace StudioMitte\Riddle\Controller;
 use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Utility\RiddleUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\MathUtility;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
 class PluginController extends ContentObjectRenderer
@@ -44,5 +43,4 @@ class PluginController extends ContentObjectRenderer
     {
         return GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCode($id);
     }
-
 }

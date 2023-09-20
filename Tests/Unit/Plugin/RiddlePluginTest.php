@@ -22,7 +22,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddlePluginTest extends BaseTestCase
 {
-
     /**
      * @test
      * @dataProvider htmlCodeIsDeliveredDataProvider
@@ -51,7 +50,7 @@ class RiddlePluginTest extends BaseTestCase
             </language>
         </sheet>
     </data>
-</T3FlexForms>'
+</T3FlexForms>',
         ]);
         $mockedProvider = $this->getAccessibleMock(PluginController::class, ['getRiddleHtml'], [], '', false);
         $mockedProvider->_set('cObj', $mockedContentObjectRenderer);
@@ -67,11 +66,11 @@ class RiddlePluginTest extends BaseTestCase
     {
         return [
             'working flexforms' => [
-                456, 'some html string'
+                456, 'some html string',
             ],
             'non working flexforms' => [
-                0, ''
-            ]
+                0, '',
+            ],
         ];
     }
 

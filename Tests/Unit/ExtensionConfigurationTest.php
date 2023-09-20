@@ -11,17 +11,14 @@ namespace StudioMitte\Riddle\Tests\Unit;
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Exception\ApiConfigurationMissingException;
 use StudioMitte\Riddle\ExtensionConfiguration;
-use StudioMitte\Riddle\Hooks\PageLayoutView;
 use TYPO3\CMS\Core\Configuration\ExtensionConfiguration as ExtensionConfigurationCore;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class ExtensionConfigurationTest extends BaseTestCase
 {
-
     /**
      * @test
      * @dataProvider configurationCanBeRetrievedDataProvider
@@ -42,8 +39,8 @@ class ExtensionConfigurationTest extends BaseTestCase
     {
         return [
             'working api' => [
-                ['apiKey' => '123'], 123
-            ]
+                ['apiKey' => '123'], 123,
+            ],
         ];
     }
 
@@ -62,7 +59,8 @@ class ExtensionConfigurationTest extends BaseTestCase
     /**
      * @test
      */
-    public function exceptionsAreHandledInConstructor(): void {
+    public function exceptionsAreHandledInConstructor(): void
+    {
         $mockedCoreExtensionConfiguration = $this->getAccessibleMock(ExtensionConfigurationCore::class, ['get'], [], '', false);
         $mockedCoreExtensionConfiguration->expects(self::once())->method('get')->with('riddle')->willThrowException(new \RuntimeException('faked exception'));
         GeneralUtility::addInstance(ExtensionConfigurationCore::class, $mockedCoreExtensionConfiguration);

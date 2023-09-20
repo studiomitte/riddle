@@ -68,14 +68,12 @@ class RiddleApi
         if ($response->getStatusCode() === 200) {
             if (\str_starts_with($action, 'riddle/embed-code')) {
                 return $response->getBody()->getContents();
-            } else {
-                return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['data'];
             }
+            return json_decode($response->getBody()->getContents(), true, 512, JSON_THROW_ON_ERROR)['data'];
         }
 
         throw new \UnexpectedValueException('Error for riddle request: ' . $response->getStatusCode(), 1597956586);
     }
-
 
     /**
      * Creates the client to do requests
@@ -95,4 +93,3 @@ class RiddleApi
         return GeneralUtility::makeInstance(Client::class, $httpOptions);
     }
 }
-

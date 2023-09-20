@@ -10,6 +10,6 @@
         'access' => 'group,user',
         'name' => 'site_riddle',
         'icon' => 'EXT:riddle/Resources/Public/Icons/Extension.png',
-        'labels' => 'LLL:EXT:riddle/Resources/Private/Language/locallang.xlf'
+        'labels' => 'LLL:EXT:riddle/Resources/Private/Language/locallang.xlf',
     ]
 );

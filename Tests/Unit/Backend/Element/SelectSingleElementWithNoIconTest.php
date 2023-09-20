@@ -21,7 +21,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class SelectSingleElementWithNoIconTest extends BaseTestCase
 {
-
     /**
      * @test
      */
@@ -34,7 +33,7 @@ class SelectSingleElementWithNoIconTest extends BaseTestCase
             'tableName' => 'tt_content',
             'fieldName' => 'field',
             'databaseRow' => [
-                'uid' => 123
+                'uid' => 123,
             ],
             'parameterArray' => [
                 'itemFormElName' => 'itemFormElName',
@@ -51,15 +50,15 @@ class SelectSingleElementWithNoIconTest extends BaseTestCase
                             [
                                 0 => 'label 2',
                                 1 => 'fo',
-                                2 => 'another-icon']
-                        ]
-                    ]
-                ]
+                                2 => 'another-icon'],
+                        ],
+                    ],
+                ],
             ],
             'inlineStructure' => [],
             'isInlineChild' => false,
             'inlineParentUid' => false,
-            'size' => 1
+            'size' => 1,
         ];
         $iconFactoryProphecy = $this->prophesize(IconFactory::class);
         GeneralUtility::addInstance(IconFactory::class, $iconFactoryProphecy->reveal());

@@ -20,7 +20,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class PageLayoutViewTest extends BaseTestCase
 {
-
     /**
      * @test
      */
@@ -53,8 +52,8 @@ class PageLayoutViewTest extends BaseTestCase
 
         $params = [
             'row' => [
-                'pi_flexform' => ''
-            ]
+                'pi_flexform' => '',
+            ],
         ];
         self::assertEquals('some html', $mockedPageLayoutView->getExtensionSummary($params));
     }
@@ -74,8 +73,8 @@ class PageLayoutViewTest extends BaseTestCase
 
         $params = [
             'row' => [
-                'pi_flexform' => ''
-            ]
+                'pi_flexform' => '',
+            ],
         ];
         self::assertEquals('some html', $mockedPageLayoutView->getExtensionSummary($params));
     }

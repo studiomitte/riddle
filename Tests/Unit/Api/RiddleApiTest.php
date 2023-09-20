@@ -20,7 +20,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddleApiTest extends BaseTestCase
 {
-
     private $listOfRiddles = [
         [
             'title' => 'riddle 1',
@@ -28,7 +27,7 @@ class RiddleApiTest extends BaseTestCase
         ],
         [
             'title' => 'riddle 2',
-            'id' => 456
+            'id' => 456,
         ],
     ];
 
@@ -75,15 +74,14 @@ class RiddleApiTest extends BaseTestCase
             'riddle found' => [
                 456, [
                     'title' => 'riddle 2',
-                    'id' => 456
-                ]
+                    'id' => 456,
+                ],
             ],
             'no riddle found' => [
-                123456, []
-            ]
+                123456, [],
+            ],
         ];
     }
-
 
     /**
      * @test
@@ -158,6 +156,5 @@ class RiddleApiTest extends BaseTestCase
         $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['dummy'], [], '', true);
 
         self::assertEquals($expected, $mockedRiddleApi->_call('request', 'action'));
-
     }
 }

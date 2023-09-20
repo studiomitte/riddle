@@ -8,20 +8,19 @@ return [
         'sortby' => 'sorting',
         'searchFields' => 'question,answer,keywords,images,files',
         'typeicon_classes' => [
-            'default' => 'ext-plainfaq-faq'
+            'default' => 'ext-plainfaq-faq',
         ],
-        'readOnly' => true
+        'readOnly' => true,
     ],
     'types' => [
         '1' => ['showitem' => '
-            question, slug, answer, keywords,'
+            question, slug, answer, keywords,',
         ],
     ],
     'palettes' => [
         'language' => ['showitem' => 'sys_language_uid, l10n_parent, l10n_diffsource'],
     ],
     'columns' => [
-
 
     ],
 ];

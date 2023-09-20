@@ -16,7 +16,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class ExternalIconsTest extends BaseTestCase
 {
-
     /**
      * @test
      */
@@ -27,7 +26,7 @@ class ExternalIconsTest extends BaseTestCase
             'fieldName' => 'field',
             'databaseRow' => [
                 'uid' => 123,
-                'field' => ['fo']
+                'field' => ['fo'],
             ],
             'parameterArray' => [
                 'itemFormElName' => 'itemFormElName',
@@ -44,15 +43,15 @@ class ExternalIconsTest extends BaseTestCase
                             [
                                 0 => 'label 2',
                                 1 => 'fo',
-                                2 => 'https://some-external.icon.com']
-                        ]
-                    ]
-                ]
+                                2 => 'https://some-external.icon.com'],
+                        ],
+                    ],
+                ],
             ],
             'inlineStructure' => [],
             'isInlineChild' => false,
             'inlineParentUid' => false,
-            'size' => 1
+            'size' => 1,
         ];
 
         /** @var ExternalIcons $externalIcons */

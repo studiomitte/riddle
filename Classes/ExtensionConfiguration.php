@@ -16,7 +16,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class ExtensionConfiguration implements SingletonInterface
 {
-
     protected string $apiKey = '';
 
     public function __construct()
@@ -35,5 +34,4 @@ class ExtensionConfiguration implements SingletonInterface
     {
         return $this->apiKey;
     }
-
 }

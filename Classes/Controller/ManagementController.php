@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace StudioMitte\Riddle\Controller;
 
-use TYPO3\CMS\Core\Page\PageRenderer;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use StudioMitte\Riddle\Domain\Dto\LogDemand;
@@ -13,6 +12,7 @@ use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3Fluid\Fluid\View\ViewInterface;
@@ -86,7 +86,6 @@ class ManagementController
             ->setPage(1);
         $riddles = $this->logRepository->findByDemandForExport($demand);
 
-
         $fp = fopen('php://output', 'wb');
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="export.csv"');
@@ -95,7 +94,7 @@ class ManagementController
         fputcsv($fp, array_keys($riddles[0]));
         foreach ($riddles as $row) {
             fputcsv($fp, array_values($row));
-        };
+        }
         fclose($fp);
         die;
     }
@@ -114,7 +113,7 @@ class ManagementController
             'hasLessPages' => $demand->getPage() > 1,
             'hasMorePages' => $demand->getPage() < $numberOfPages,
             'startRecord' => $demand->getOffset() + 1,
-            'endRecord' => $endRecord
+            'endRecord' => $endRecord,
         ];
         if ($pagination['current'] < $pagination['numberOfPages']) {
             $pagination['nextPage'] = $pagination['current'] + 1;

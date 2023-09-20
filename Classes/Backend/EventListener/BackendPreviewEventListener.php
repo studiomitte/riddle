@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace StudioMitte\Riddle\Backend\EventListener;
 
-use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
-use TYPO3\CMS\Core\Attribute\AsEventListener;
 use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Exception\ApiConfigurationMissingException;
 use StudioMitte\Riddle\Utility\RiddleUtility;
+use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
+use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 
@@ -25,7 +25,7 @@ final class BackendPreviewEventListener
         if ($event->getTable() !== 'tt_content') {
             return;
         }
-        
+
         if ($event->getRecord()['CType'] === 'list' && $event->getRecord()['list_type'] === 'riddle_riddle') {
             $riddleId = RiddleUtility::getRiddleId($event->getRecord()['pi_flexform']);
 
