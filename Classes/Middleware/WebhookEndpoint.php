@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace StudioMitte\Riddle\Middleware;
@@ -11,11 +12,9 @@ use StudioMitte\Riddle\Domain\LogItem;
 use StudioMitte\Riddle\Domain\Repository\LogRepository;
 use TYPO3\CMS\Core\Http\JsonResponse;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Utility\StringUtility;
 
 class WebhookEndpoint implements MiddlewareInterface
 {
-
     private const ENDPOINT = '/riddle-endpoint';
 
     /** @var LogRepository */
@@ -29,9 +28,8 @@ class WebhookEndpoint implements MiddlewareInterface
     public function process(
         ServerRequestInterface $request,
         RequestHandlerInterface $handler
-    ): ResponseInterface
-    {
-        if (!StringUtility::beginsWith($request->getUri()->getPath(), self::ENDPOINT)) {
+    ): ResponseInterface {
+        if (!\str_starts_with($request->getUri()->getPath(), self::ENDPOINT)) {
             return $handler->handle($request);
         }
         $json = $request->getParsedBody()['data'] ?? '';
@@ -44,5 +42,4 @@ class WebhookEndpoint implements MiddlewareInterface
         }
         return new JsonResponse(['status' => 'ok']);
     }
-
 }

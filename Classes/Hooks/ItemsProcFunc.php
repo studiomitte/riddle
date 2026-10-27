@@ -10,10 +10,10 @@ namespace StudioMitte\Riddle\Hooks;
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
-
 use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Utility\RiddleUtility;
 use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Messaging\AbstractMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -26,18 +26,7 @@ class ItemsProcFunc
     public function riddleList(array &$config): void
     {
         try {
-            $riddles2 = $this->getAllRiddlesV2();
-            if ($riddles2) {
-                $config['items'][] = ['V2', '--div--'];
-            }
-            foreach ($riddles2 as $item) {
-                $config['items'][] = $this->getSelectItem($item);
-            }
-
             $riddles = $this->getAllRiddles();
-            if ($riddles) {
-                $config['items'][] = ['V1', '--div--'];
-            }
             foreach ($riddles as $item) {
                 $config['items'][] = $this->getSelectItem($item, false);
             }
@@ -47,7 +36,7 @@ class ItemsProcFunc
                 FlashMessage::class,
                 $e->getMessage(),
                 '',
-                FlashMessage::ERROR
+                AbstractMessage::ERROR
             );
             GeneralUtility::makeInstance(FlashMessageService::class)
                 ->getMessageQueueByIdentifier()
@@ -58,39 +47,18 @@ class ItemsProcFunc
 
     protected function getSelectItem(array $item, bool $isV2 = true): array
     {
-        if ($isV2) {
-            $item = RiddleUtility::enrichRiddleData($item);
-            $date = $item['_enriched']['datepublished'] ? BackendUtility::date($item['_enriched']['datepublished']) : $item['created']['at'] ?? '';
-            return [
-                sprintf('%s [%s] - %s', $item['title'], $item['type'] ?? '-', $date),
-                $item['UUID'],
-                $item['image'] ?? '',
-            ];
-        }
-
         $item = RiddleUtility::enrichRiddleData($item);
-
-        $date = $item['_enriched']['datepublished'] ? BackendUtility::date($item['_enriched']['datepublished']) : $item['datepublished'];
+        $date = $item['_enriched']['datepublished'] ? BackendUtility::date($item['_enriched']['datepublished']) : $item['created']['at'] ?? '';
         return [
             sprintf('%s [%s] - %s', $item['title'], $item['type'] ?? '-', $date),
-            $item['id'],
-            $item['thumb'] ?? '',
+            $item['UUID'],
+            $item['image'] ?? '',
         ];
     }
 
     protected function getAllRiddles(): array
     {
         $api = GeneralUtility::makeInstance(RiddleApi::class);
-        $response = $api->getRiddleList();
-
-        return $response['response']['items'] ?? [];
-    }
-
-    protected function getAllRiddlesV2(): array
-    {
-        $api = GeneralUtility::makeInstance(RiddleApi::class);
-        $response = $api->getRiddleListV2();
-
-        return $response['data'] ?? [];
+        return $api->getRiddleList();
     }
 }

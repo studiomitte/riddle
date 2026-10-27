@@ -5,11 +5,11 @@ return [
         'studiomitte/riddle/router' => [
             'target' => \StudioMitte\Riddle\Middleware\WebhookEndpoint::class,
             'after' => [
-                'typo3/cms-frontend/site'
+                'typo3/cms-frontend/site',
             ],
             'before' => [
-                'typo3/cms-frontend/static-route-resolver'
-            ]
+                'typo3/cms-frontend/static-route-resolver',
+            ],
         ],
     ],
 ];

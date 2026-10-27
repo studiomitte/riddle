@@ -12,7 +12,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class LogRepository
 {
-
     private const TABLE = 'tx_riddle_log';
 
     public function add(array $item): void
@@ -98,9 +97,7 @@ class LogRepository
 
             $rows = $queryBuilder
                 ->select($field)
-                ->from(self::TABLE)
-                ->groupBy($field)
-                ->execute()
+                ->from(self::TABLE)->groupBy($field)->executeQuery()
                 ->fetchAll();
 
             foreach ($rows as $row) {
@@ -115,5 +112,4 @@ class LogRepository
     {
         return GeneralUtility::makeInstance(ConnectionPool::class)->getConnectionForTable(self::TABLE);
     }
-
 }

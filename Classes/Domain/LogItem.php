@@ -6,7 +6,6 @@ namespace StudioMitte\Riddle\Domain;
 
 class LogItem
 {
-
     public static function convert(array $raw): array
     {
         $raw = $raw['data'];
@@ -25,7 +24,7 @@ class LogItem
             'result_id' => $raw['resultData']['resultId'] ?? '',
             'lead_name' => $raw['lead2']['Name']['value'] ?? '',
             'lead_email' => $raw['lead2']['Email']['value'] ?? '',
-            'full_json' => json_encode($raw, JSON_THROW_ON_ERROR)
+            'full_json' => json_encode($raw, JSON_THROW_ON_ERROR),
         ];
 
         return $data;

@@ -26,7 +26,7 @@ class ItemsProcFuncTest extends BaseTestCase
             'title' => 'A riddle',
             'dateCreated' => '2020-08-21 19:21:07',
             'datepublished' => '2020-09-21 19:21:07',
-            'thumb' => 'https://cdn.riddle.com/img1.png'
+            'thumb' => 'https://cdn.riddle.com/img1.png',
         ],
         [
             'id' => 456,
@@ -34,7 +34,7 @@ class ItemsProcFuncTest extends BaseTestCase
             'type' => 'Quiz',
             'dateCreated' => '2019-08-21 19:21:07',
             'datepublished' => '2019-09-21 19:21:07',
-        ]
+        ],
     ];
 
     /**
@@ -65,8 +65,8 @@ class ItemsProcFuncTest extends BaseTestCase
                 'items' => [
                     ['title' => 'riddle 1'],
                     ['title' => 'riddle 2'],
-                ]
-            ]
+                ],
+            ],
         ];
         /** @var RiddleApi $riddleApiProphecy */
         $riddleApiProphecy = $this->prophesize(RiddleApi::class);

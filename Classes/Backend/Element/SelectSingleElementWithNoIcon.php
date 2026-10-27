@@ -18,7 +18,6 @@ use TYPO3\CMS\Backend\Form\Element\SelectSingleElement;
  */
 class SelectSingleElementWithNoIcon extends SelectSingleElement
 {
-
     /**
      * @inheritDoc
      */

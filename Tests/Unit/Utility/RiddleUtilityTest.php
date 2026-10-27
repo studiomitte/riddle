@@ -20,7 +20,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddleUtilityTest extends BaseTestCase
 {
-
     /**
      * @test
      * @dataProvider apiDataIsEnrichedDataProvider
@@ -46,9 +45,9 @@ class RiddleUtilityTest extends BaseTestCase
                     'datepublished' => '2020-09-21 19:21:07',
                     '_enriched' => [
                         'dateCreated' => 1598030467,
-                        'datepublished' => 1600708867
-                    ]
-                ]
+                        'datepublished' => 1600708867,
+                    ],
+                ],
             ],
             'invalid dates given' => [
                 [
@@ -58,8 +57,8 @@ class RiddleUtilityTest extends BaseTestCase
                 [
                     'dateCreated' => '08-21 19:21:07',
                     'datepublished' => '09-21 19:21:07',
-                ]
-            ]
+                ],
+            ],
         ];
     }
 
@@ -69,7 +68,7 @@ class RiddleUtilityTest extends BaseTestCase
      * @param int $expectedId
      * @param string $flexforms
      */
-    public function idCanBeRetrievedFromFlexforms(int $expectedId, string $flexforms): void
+    public function idCanBeRetrievedFromFlexforms(string $expectedId, string $flexforms): void
     {
         $cacheFrontendProphecy = $this->prophesize(PhpFrontend::class);
         $cacheFrontendProphecy->require(Argument::any())->willReturn(false);
@@ -86,7 +85,7 @@ class RiddleUtilityTest extends BaseTestCase
     {
         return [
             'working flexform' => [
-                264528,
+                '264528',
                 '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
@@ -98,10 +97,10 @@ class RiddleUtilityTest extends BaseTestCase
             </language>
         </sheet>
     </data>
-</T3FlexForms>'
+</T3FlexForms>',
             ],
             'non working flexform' => [
-                0,
+                '',
                 '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <T3FlexForms>
     <data>
@@ -113,12 +112,12 @@ class RiddleUtilityTest extends BaseTestCase
             </language>
         </sheet>
     </data>
-</T3FlexForms>'
+</T3FlexForms>',
             ],
             'empty flexform' => [
-                0,
-                ''
-            ]
+                '',
+                '',
+            ],
         ];
     }
 }

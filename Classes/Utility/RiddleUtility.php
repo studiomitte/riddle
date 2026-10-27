@@ -16,7 +16,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RiddleUtility
 {
-
     /**
      * Enrich the API riddle response
      *
@@ -61,6 +60,6 @@ class RiddleUtility
             return '';
         }
         $data = GeneralUtility::makeInstance(FlexFormService::class)->convertFlexFormContentToArray($flexforms);
-        return ($data['riddle'] ?? '');
+        return $data['riddle'] ?? '';
     }
 }

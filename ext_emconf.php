@@ -1,4 +1,5 @@
 <?php
+
 $EM_CONF[$_EXTKEY] = [
     'title' => 'riddle.com Integration',
     'description' => 'Embed riddles from riddle.com',
@@ -7,13 +8,12 @@ $EM_CONF[$_EXTKEY] = [
     'author_email' => 'gr@studiomitte.com',
     'author_company' => 'studiomitte.com',
     'state' => 'stable',
-    'clearCacheOnLoad' => true,
-    'version' => '1.2.0',
+    'version' => '2.0.0',
     'constraints' =>
         [
             'depends' =>
                 [
-                    'typo3' => '9.5.0-11.5.99'
+                    'typo3' => '12.4.0-12.4.99',
                 ],
         ],
     'autoload' =>
@@ -22,5 +22,5 @@ $EM_CONF[$_EXTKEY] = [
                 [
                     'StudioMitte\\Riddle\\' => 'Classes',
                 ],
-        ]
+        ],
 ];

@@ -32,17 +32,17 @@ class ExternalIcons extends AbstractNode
         $selectItems = $parameterArray['fieldConf']['config']['items'];
         $selectItemCounter = 0;
         foreach ($selectItems as $item) {
-            if ($item[1] === '--div--') {
+            if ($item['value'] === '') {
                 continue;
             }
-            $icon = $item[2] ?? '';
+            $icon = $item['icon'] ?? '';
             if ($icon) {
-                $fieldValue = $this->data['databaseRow'][$this->data['fieldName']];
+                $fieldValue = $this->data['databaseRow'][$this->data['fieldName']]['data']['sDEF']['lDEF']['riddle']['vDEF'][0] ?? '';
                 $selectIcons[] = [
-                    'title' => $item[0],
-                    'active' => ($fieldValue[0] === (string)$item[1]) ? true : false,
+                    'title' => $item['label'],
+                    'active' => ($fieldValue === (string)$item['value']) ? true : false,
                     'icon' => $icon,
-                    'index' => $selectItemCounter,
+                    'index' => $selectItemCounter + 1,
                 ];
             }
             $selectItemCounter++;
@@ -50,19 +50,17 @@ class ExternalIcons extends AbstractNode
 
         $html = [];
         if (!empty($selectIcons)) {
-            $html[] = '<div class="t3js-forms-select-single-icons icon-list">';
-            $html[] = '<div class="row">';
+            $html[] = '<div class="t3js-forms-select-single-icons form-wizard-icon-list">';
             foreach ($selectIcons as $i => $selectIcon) {
                 $active = $selectIcon['active'] ? ' active' : '';
-                $html[] = '<div class="item' . $active . '">';
+                $html[] = '<div class="form-wizard-icon-list-item">';
                 if (is_array($selectIcon)) {
-                    $html[] = '<a href="#" title="' . htmlspecialchars($selectIcon['title'], ENT_COMPAT, 'UTF-8', false) . '" data-select-index="' . htmlspecialchars((string)$selectIcon['index']) . '">';
+                    $html[] = '<a href="#" class="' . $active . '"title="' . htmlspecialchars($selectIcon['title'], ENT_COMPAT, 'UTF-8', false) . '" data-select-index="' . htmlspecialchars((string)$selectIcon['index']) . '">';
                     $html[] = sprintf('<span class="t3js-icon"><img src="%s" /></span>', $selectIcon['icon']);
                     $html[] = '</a>';
                 }
                 $html[] = '</div>';
             }
-            $html[] = '</div>';
             $html[] = '</div>';
         }
 

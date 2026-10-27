@@ -20,7 +20,6 @@ use TYPO3\TestingFramework\Core\BaseTestCase;
 
 class RiddleApiTest extends BaseTestCase
 {
-
     private $listOfRiddles = [
         [
             'title' => 'riddle 1',
@@ -28,7 +27,7 @@ class RiddleApiTest extends BaseTestCase
         ],
         [
             'title' => 'riddle 2',
-            'id' => 456
+            'id' => 456,
         ],
     ];
 
@@ -38,12 +37,11 @@ class RiddleApiTest extends BaseTestCase
     public function riddleListReturnsResult(): void
     {
         $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['request'], [], '', false);
-        $mockedRiddleApi->expects(self::once())->method('request')->with('riddle/get/list')->willReturn($this->listOfRiddles);
+        $mockedRiddleApi->expects(self::once())->method('request')->with('riddle/list')->willReturn($this->listOfRiddles);
 
         /** @var ExtensionConfiguration $extensionConfiguration */
         $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
         $extensionConfiguration->getApiKey()->willReturn('abc');
-        $extensionConfiguration->getApiToken()->willReturn('def');
         $mockedRiddleApi->_set('extensionConfiguration', $extensionConfiguration->reveal());
 
         $riddles = $mockedRiddleApi->getRiddleList();
@@ -60,11 +58,10 @@ class RiddleApiTest extends BaseTestCase
     {
         $response = ['response' => ['items' => $this->listOfRiddles]];
         $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['request'], [], '', false);
-        $mockedRiddleApi->expects(self::once())->method('request')->with('riddle/get/list')->willReturn($response);
+        $mockedRiddleApi->expects(self::once())->method('request')->with('riddle/list')->willReturn($response);
 
         $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
         $extensionConfiguration->getApiKey()->willReturn('abc');
-        $extensionConfiguration->getApiToken()->willReturn('def');
         $mockedRiddleApi->_set('extensionConfiguration', $extensionConfiguration->reveal());
 
         $riddle = $mockedRiddleApi->getRiddleItem($id);
@@ -77,15 +74,14 @@ class RiddleApiTest extends BaseTestCase
             'riddle found' => [
                 456, [
                     'title' => 'riddle 2',
-                    'id' => 456
-                ]
+                    'id' => 456,
+                ],
             ],
             'no riddle found' => [
-                123456, []
-            ]
+                123456, [],
+            ],
         ];
     }
-
 
     /**
      * @test
@@ -94,11 +90,10 @@ class RiddleApiTest extends BaseTestCase
     {
         $response = ['response' => 'some html'];
         $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['request'], [], '', false);
-        $mockedRiddleApi->expects(self::once())->method('request')->with('riddle/get/embed-code?riddleId=123')->willReturn($response);
+        $mockedRiddleApi->expects(self::once())->method('request')->with('riddle/embed-code/123')->willReturn($response);
 
         $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
         $extensionConfiguration->getApiKey()->willReturn('abc');
-        $extensionConfiguration->getApiToken()->willReturn('def');
         $mockedRiddleApi->_set('extensionConfiguration', $extensionConfiguration->reveal());
 
         self::assertEquals($response, $mockedRiddleApi->getEmbedCode(123));
@@ -109,14 +104,14 @@ class RiddleApiTest extends BaseTestCase
      */
     public function constructorSetsExtensionConfiguration(): void
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['riddle'] = ['apiKey' => '123', 'apiToken' => 456];
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['riddle'] = ['apiKey' => '123'];
         $configuration = new ExtensionConfiguration();
 
         $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['request'], [], '', true);
 
         /** @var ExtensionConfiguration $extensionConfigurationFromApi */
         $extensionConfigurationFromApi = $mockedRiddleApi->_get('extensionConfiguration');
-        self::assertEquals(456, $configuration->getApiToken());
+        self::assertEquals(123, $configuration->getApiKey());
     }
 
     /**
@@ -161,6 +156,5 @@ class RiddleApiTest extends BaseTestCase
         $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['dummy'], [], '', true);
 
         self::assertEquals($expected, $mockedRiddleApi->_call('request', 'action'));
-
     }
 }

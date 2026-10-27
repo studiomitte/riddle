@@ -12,6 +12,7 @@ use TYPO3\CMS\Backend\Template\ModuleTemplate;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 use TYPO3\CMS\Core\Http\HtmlResponse;
 use TYPO3\CMS\Core\Localization\LanguageService;
+use TYPO3\CMS\Core\Page\PageRenderer;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Fluid\View\StandaloneView;
 use TYPO3Fluid\Fluid\View\ViewInterface;
@@ -38,10 +39,10 @@ class ManagementController
     /** @var LogRepository */
     protected $logRepository;
 
-    public function __construct()
+    public function __construct(private PageRenderer $pageRenderer)
     {
         $this->moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
-        $this->moduleTemplate->getPageRenderer()->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
+        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
         $this->getLanguageService()->includeLLFile('EXT:riddle/Resources/Private/Language/locallang.xlf');
         $this->logRepository = GeneralUtility::makeInstance(LogRepository::class);
     }
@@ -85,7 +86,6 @@ class ManagementController
             ->setPage(1);
         $riddles = $this->logRepository->findByDemandForExport($demand);
 
-
         $fp = fopen('php://output', 'wb');
         header('Content-Type: text/csv');
         header('Content-Disposition: attachment; filename="export.csv"');
@@ -94,7 +94,7 @@ class ManagementController
         fputcsv($fp, array_keys($riddles[0]));
         foreach ($riddles as $row) {
             fputcsv($fp, array_values($row));
-        };
+        }
         fclose($fp);
         die;
     }
@@ -113,7 +113,7 @@ class ManagementController
             'hasLessPages' => $demand->getPage() > 1,
             'hasMorePages' => $demand->getPage() < $numberOfPages,
             'startRecord' => $demand->getOffset() + 1,
-            'endRecord' => $endRecord
+            'endRecord' => $endRecord,
         ];
         if ($pagination['current'] < $pagination['numberOfPages']) {
             $pagination['nextPage'] = $pagination['current'] + 1;
