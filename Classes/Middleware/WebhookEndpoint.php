@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the "riddle" Extension for TYPO3 CMS.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ */
+
 namespace StudioMitte\Riddle\Middleware;
 
 use Psr\Http\Message\ResponseInterface;
@@ -11,33 +18,26 @@ use Psr\Http\Server\RequestHandlerInterface;
 use StudioMitte\Riddle\Domain\LogItem;
 use StudioMitte\Riddle\Domain\Repository\LogRepository;
 use TYPO3\CMS\Core\Http\JsonResponse;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class WebhookEndpoint implements MiddlewareInterface
+final readonly class WebhookEndpoint implements MiddlewareInterface
 {
     private const ENDPOINT = '/riddle-endpoint';
 
-    /** @var LogRepository */
-    protected $logRepository;
+    public function __construct(
+        private LogRepository $logRepository,
+    ) {}
 
-    public function __construct()
+    public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $this->logRepository = GeneralUtility::makeInstance(LogRepository::class);
-    }
-
-    public function process(
-        ServerRequestInterface $request,
-        RequestHandlerInterface $handler
-    ): ResponseInterface {
-        if (!\str_starts_with($request->getUri()->getPath(), self::ENDPOINT)) {
+        if (!str_starts_with($request->getUri()->getPath(), self::ENDPOINT)) {
             return $handler->handle($request);
         }
-        $json = $request->getParsedBody()['data'] ?? '';
-        if ($json) {
+        $parsedBody = $request->getParsedBody();
+        $json = is_array($parsedBody) ? (string)($parsedBody['data'] ?? '') : '';
+        if ($json !== '') {
             $data = json_decode($json, true);
-            if ($data['riddleId'] ?? false) {
-                $logItem = LogItem::convert($data);
-                $this->logRepository->add($logItem);
+            if (is_array($data) && ($data['riddleId'] ?? false)) {
+                $this->logRepository->add(LogItem::convert($data));
             }
         }
         return new JsonResponse(['status' => 'ok']);

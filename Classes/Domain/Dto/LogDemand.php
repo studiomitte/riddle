@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the "riddle" Extension for TYPO3 CMS.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ */
+
 namespace StudioMitte\Riddle\Domain\Dto;
 
 use Psr\Http\Message\ServerRequestInterface;
@@ -28,7 +35,7 @@ class LogDemand
         $demand = new self();
         $demand->type = (string)($request->getQueryParams()['type'] ?? $request->getParsedBody()['type'] ?? 0);
         $demand->id = (int)($request->getQueryParams()['id'] ?? $request->getParsedBody()['id'] ?? 0);
-        $demand->page = (int)($request->getQueryParams()['page'] ?? $request->getParsedBody()['page'] ?? 1);
+        $demand->page = max(1, (int)($request->getQueryParams()['page'] ?? $request->getParsedBody()['page'] ?? 1));
         $demand->export = (bool)($request->getQueryParams()['export'] ?? $request->getParsedBody()['export'] ?? false);
 
         return $demand;

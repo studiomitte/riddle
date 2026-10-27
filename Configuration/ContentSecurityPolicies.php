@@ -1,0 +1,17 @@
+<?php
+
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Directive;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Mutation;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\MutationCollection;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\MutationMode;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\Scope;
+use TYPO3\CMS\Core\Security\ContentSecurityPolicy\UriValue;
+use TYPO3\CMS\Core\Type\Map;
+
+// Riddle thumbnails (plugin select wizard, page module preview) are served from the riddle.com CDN
+return Map::fromEntries([
+    Scope::backend(),
+    new MutationCollection(
+        new Mutation(MutationMode::Extend, Directive::ImgSrc, new UriValue('https://cdn.riddle.com')),
+    ),
+]);

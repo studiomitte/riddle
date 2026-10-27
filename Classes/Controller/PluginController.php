@@ -2,45 +2,49 @@
 
 declare(strict_types=1);
 
-namespace StudioMitte\Riddle\Controller;
-
-/**
+/*
  * This file is part of the "riddle" Extension for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
 
+namespace StudioMitte\Riddle\Controller;
+
+use Psr\Http\Message\ServerRequestInterface;
+use Psr\Log\LoggerInterface;
 use StudioMitte\Riddle\Api\RiddleApi;
 use StudioMitte\Riddle\Utility\RiddleUtility;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Attribute\AsAllowedCallable;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 
-class PluginController extends ContentObjectRenderer
+/**
+ * Renders the riddle embed code, called as USER userFunc
+ */
+final readonly class PluginController
 {
-    protected ContentObjectRenderer $cObj;
+    public function __construct(
+        private RiddleApi $riddleApi,
+        private LoggerInterface $logger,
+    ) {}
 
-    public function setContentObjectRenderer(ContentObjectRenderer $cObj): void
+    #[AsAllowedCallable]
+    public function run(string $content, array $conf, ServerRequestInterface $request): string
     {
-        $this->cObj = $cObj;
-    }
-
-    public function run(): string
-    {
-        $flexforms = (string)$this->cObj->data['pi_flexform'];
-        if (!$flexforms) {
+        $contentObject = $request->getAttribute('currentContentObject');
+        if (!$contentObject instanceof ContentObjectRenderer) {
             return '';
         }
-        $riddleId = RiddleUtility::getRiddleId($flexforms);
-        if (!$riddleId) {
+        $riddleId = RiddleUtility::getRiddleId((string)($contentObject->data['pi_flexform'] ?? ''));
+        if ($riddleId === '') {
             return '';
         }
 
-        return $this->getRiddleHtml($riddleId);
-    }
-
-    protected function getRiddleHtml(string $id): string
-    {
-        return GeneralUtility::makeInstance(RiddleApi::class)->getEmbedCode($id);
+        try {
+            return $this->riddleApi->getEmbedCode($riddleId);
+        } catch (\Exception $e) {
+            $this->logger->error('Riddle "{id}" could not be embedded: {message}', ['id' => $riddleId, 'message' => $e->getMessage()]);
+            return '';
+        }
     }
 }

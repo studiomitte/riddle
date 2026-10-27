@@ -1,39 +1,18 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-    xmlns:rd="http://typo3.org/ns/TYPO3/CMS/Redirects/ViewHelpers"
-    xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
     data-namespace-typo3-fluid="true">
-<f:layout name="LogAdministration" />
+<f:layout name="Module" />
 
-<f:section name="headline">
-    <h1>riddles</h1>
-</f:section>
+<f:section name="Content">
+    <h1><f:translate key="LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:module.title" /></h1>
 
-<f:section name="content">
-    <f:if condition="{riddles -> f:count()}">
+    <f:render section="filter" arguments="{_all}" />
+
+    <f:if condition="{riddles}">
         <f:then>
-            <f:render section="filter" arguments="{_all}" />
             <f:render section="table" arguments="{_all}" />
         </f:then>
         <f:else>
-            <f:if condition="{demand.constraints}">
-                <f:then>
-                    <f:render section="filter" arguments="{_all}" />
-                    <f:be.infobox state="-2" title="{f:translate(key: 'LLL:EXT:redirects/Resources/Private/Language/locallang_module_redirect.xlf:redirect_not_found_with_filter.title')}">
-                        <p><f:translate key="LLL:EXT:redirects/Resources/Private/Language/locallang_module_redirect.xlf:redirect_not_found_with_filter.message"/></p>
-                        <a class="btn btn-default" href="{f:be.uri(route:'site_redirects', parameters: '{action: \'overview\'}')}">
-                            <f:translate key="LLL:EXT:redirects/Resources/Private/Language/locallang_module_redirect.xlf:redirect_no_filter"/>
-                        </a>
-                    </f:be.infobox>
-                </f:then>
-                <f:else>
-                    <f:be.infobox state="-1" title="{f:translate(key: 'LLL:EXT:redirects/Resources/Private/Language/locallang_module_redirect.xlf:redirect_not_found.title')}">
-                        <p><f:translate key="LLL:EXT:redirects/Resources/Private/Language/locallang_module_redirect.xlf:redirect_not_found.message"/></p>
-                        <be:link.newRecord class="btn btn-primary" table="sys_redirect">
-                            <f:translate key="LLL:EXT:redirects/Resources/Private/Language/locallang_module_redirect.xlf:redirect_create"/>
-                        </be:link.newRecord>
-                    </f:be.infobox>
-                </f:else>
-            </f:if>
+            <f:be.infobox state="-1" title="{f:translate(key: 'LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:module.noEntries')}" />
         </f:else>
     </f:if>
 </f:section>
@@ -44,22 +23,22 @@
         <table class="table table-striped table-hover">
             <thead>
                 <tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Title</th>
-                    <th>Lead</th>
-                    <th>Result</th>
+                    <th><f:translate key="LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:module.column.date" /></th>
+                    <th><f:translate key="LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:riddle.type" /></th>
+                    <th><f:translate key="LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:tx_riddle_log.riddle_title" /></th>
+                    <th><f:translate key="LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:module.column.lead" /></th>
+                    <th><f:translate key="LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:tx_riddle_log.result" /></th>
                 </tr>
             </thead>
             <tbody>
                 <f:for each="{riddles}" as="riddle">
-                   <tr>
-                       <td>{riddle.crdate -> f:format.date(format: 'd.m.Y H:i')}</td>
-                       <td>{riddle.riddle_type}</td>
-                       <td>{riddle.riddle_title -> f:format.stripTags()}</td>
-                       <td>{riddle.lead_name} ({riddle.lead_email})</td>
-                       <td>{riddle.result_score_percentage}</td>
-                   </tr>
+                    <tr>
+                        <td>{riddle.crdate -> f:format.date(format: 'd.m.Y H:i')}</td>
+                        <td>{riddle.riddle_type}</td>
+                        <td>{riddle.riddle_title -> f:format.stripTags()}</td>
+                        <td>{riddle.lead_name} <f:if condition="{riddle.lead_email}">({riddle.lead_email})</f:if></td>
+                        <td>{riddle.result_score_percentage}</td>
+                    </tr>
                 </f:for>
             </tbody>
         </table>
@@ -68,29 +47,27 @@
 </f:section>
 
 <f:section name="filter">
-    <form action="{f:be.uri(route:'site_riddle', parameters: '{action: \'overview\'}')}"
-        method="post"
-        enctype="multipart/form-data"
-        name="demand"
-        class="form-inline form-inline-spaced">
-
-        <div class="form-group">
-            <label for="demand-source-host">type</label>
-            <select id="demand-source-host" class="form-control input-sm" name="demand[source_host]" data-on-change="submit">
+    <form action="{f:be.uri(route: 'site_riddle')}" method="post" name="demand" class="row row-cols-auto g-3 align-items-end mb-3">
+        <div class="col">
+            <label for="demand-type" class="form-label"><f:translate key="LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:riddle.type" /></label>
+            <select id="demand-type" class="form-select form-select-sm" name="type">
                 <option value=""></option>
                 <f:for each="{filter.type}" as="singleType">
-                    <f:form.select.option value="{singleType}" selected="{singleType} === {demand.type}">{singleType}</f:form.select.option>
+                    <f:if condition="{singleType} == {demand.type}">
+                        <f:then><option value="{singleType}" selected="selected">{singleType}</option></f:then>
+                        <f:else><option value="{singleType}">{singleType}</option></f:else>
+                    </f:if>
                 </f:for>
             </select>
         </div>
-
-        <div class="form-group">
-            <label for="demand-export">csv export</label>
-            <f:form.checkbox id="demand-export" name="export" value="1" checked="{demand.export}" />
+        <div class="col">
+            <div class="form-check">
+                <input type="checkbox" class="form-check-input" id="demand-export" name="export" value="1" />
+                <label class="form-check-label" for="demand-export"><f:translate key="LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:module.export" /></label>
+            </div>
         </div>
-
-        <div class="form-group">
-            <input type="submit" value="{f:translate(key: 'LLL:EXT:redirects/Resources/Private/Language/locallang_module_redirect.xlf:filter.sendButton')}" class="btn btn-default btn-sm" />
+        <div class="col">
+            <button type="submit" class="btn btn-default btn-sm"><f:translate key="LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:module.filter" /></button>
         </div>
     </form>
 </f:section>

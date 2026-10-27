@@ -1,8 +1,6 @@
-Todos.md
-.php_cs.cache
-/Documentation-GENERATED-temp
-.build/
-Build/.phpunit.result.cache
-composer.lock
+/.Build/
 /.php-cs-fixer.cache
-/var
+/.phpunit.cache/
+/Documentation-GENERATED-temp/
+/composer.lock
+/var/

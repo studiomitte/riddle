@@ -1,56 +1,62 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-      xmlns:core="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+      xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
       data-namespace-typo3-fluid="true">
 <strong>{f:translate(key:'{lll}plugin.title')}</strong>
 
-<f:if condition="{riddleId}">
+<f:if condition="{apiNotConfigured}">
     <f:then>
+        <f:be.infobox state="1">{f:translate(key:'{lll}error.apiNotConfigured')}</f:be.infobox>
+    </f:then>
+    <f:else if="{riddleId}">
         <f:if condition="{riddle}">
             <f:then>
                 <h3>{riddle.title}</h3>
-                        <img src="{riddle.image}" class="img-responsive" alt="{riddle.title}" style="max-width: 600px;max-height: 400px"/>
-                        <table class="table table-condensed table-striped table-hover">
-                            <thead>
-                                <tr>
-                                    <th colspan="2">{f:translate(key:'{lll}riddle.overview')}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                <f:if condition="{riddle.image}">
+                    <img src="{riddle.image}" class="img-fluid" alt="{riddle.title}" style="max-width: 600px;max-height: 400px"/>
+                </f:if>
+                <table class="table table-sm table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th colspan="2">{f:translate(key:'{lll}riddle.overview')}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>{f:translate(key:'{lll}riddle.id')}</th>
+                            <td>{riddle.UUID}</td>
+                        </tr>
+                        <tr>
+                            <th>{f:translate(key:'{lll}riddle.type')}</th>
+                            <td>{riddle.type}</td>
+                        </tr>
+                        <tr>
+                            <th>{f:translate(key:'{lll}riddle.created')}</th>
+                            <td>
+                                <f:if condition="{riddle._enriched.dateCreated}">{riddle._enriched.dateCreated -> f:format.date(format:dateTime)}<br></f:if>
+                                <span title="{riddle.user}">{riddle.created.by}</span>
+                            </td>
+                        </tr>
+                        <tr>
+                            <th>{f:translate(key:'{lll}riddle.published')}</th>
+                            <td>
+                                <f:if condition="{riddle._enriched.datepublished}">{riddle._enriched.datepublished -> f:format.date(format:dateTime)}<br></f:if>
+                                <span title="{riddle.user}">{riddle.published.by}</span>
+                            </td>
+                        </tr>
+                        <f:if condition="{riddle.tags}">
                             <tr>
-                                <th>{f:translate(key:'{lll}riddle.id')}</th>
-                                <td>{riddle.UUID}</td>
-                            </tr>
-                            <tr>
-                                <th>{f:translate(key:'{lll}riddle.type')}</th>
-                                <td>{riddle.type}</td>
-                            </tr>
-                            <tr>
-                                <th>{f:translate(key:'{lll}riddle.created')}</th>
+                                <th>{f:translate(key:'{lll}riddle.tags')}</th>
                                 <td>
-                                    {riddle._enriched.dateCreated -> f:format.date(format:dateTime)}<br>
-                                    <span title="{riddle.user}">{riddle.created.by}</span>
+                                    <ul>
+                                        <f:for each="{riddle.tags}" as="tag">
+                                            <li title="{tag.id}">{tag.name}</li>
+                                        </f:for>
+                                    </ul>
                                 </td>
                             </tr>
-                            <tr>
-                                <th>{f:translate(key:'{lll}riddle.published')}</th>
-                                <td>{riddle._enriched.datepublished -> f:format.date(format:dateTime)}<br>
-                                    <span title="{riddle.user}">{riddle.published.by}</span>
-                                </td>
-                            </tr>
-                            <f:if condition="{riddle.tags}">
-                                <tr>
-                                    <th>{f:translate(key:'{lll}riddle.tags')}</th>
-                                    <td>
-                                        <ul>
-                                            <f:for each="{riddle.tags}" as="tag">
-                                                <li title="{tag.id}">{tag.name}</li>
-                                            </f:for>
-                                        </ul>
-                                    </td>
-                                </tr>
-                            </f:if>
-                            </tbody>
-                        </table>
+                        </f:if>
+                    </tbody>
+                </table>
 
                 <div class="btn-toolbar" style="margin-top:10px">
                     <a class="btn btn-default" target="_blank" rel="noopener" href="https://www.riddle.com/view/{riddle.UUID}">
@@ -67,18 +73,9 @@
                 <f:be.infobox state="1">{f:translate(key:'{lll}error.noRiddleResponse')}</f:be.infobox>
             </f:else>
         </f:if>
-    </f:then>
+    </f:else>
     <f:else>
-        <f:be.infobox state="1">
-            <f:if condition="{apiNotConfigured}">
-                <f:then>
-                    {f:translate(key:'{lll}error.apiNotConfigured')}
-                </f:then>
-                <f:else>
-                    {f:translate(key:'{lll}error.noRiddleIdProvided')}
-                </f:else>
-            </f:if>
-        </f:be.infobox>
+        <f:be.infobox state="1">{f:translate(key:'{lll}error.noRiddleIdProvided')}</f:be.infobox>
     </f:else>
 </f:if>
 </html>

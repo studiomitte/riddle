@@ -2,6 +2,13 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the "riddle" Extension for TYPO3 CMS.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ */
+
 namespace StudioMitte\Riddle\Backend\EventListener;
 
 use StudioMitte\Riddle\Api\RiddleApi;
@@ -10,58 +17,49 @@ use StudioMitte\Riddle\Utility\RiddleUtility;
 use TYPO3\CMS\Backend\View\Event\PageContentPreviewRenderingEvent;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
+use TYPO3\CMS\Core\View\ViewFactoryData;
+use TYPO3\CMS\Core\View\ViewFactoryInterface;
 
-#[AsEventListener(
-    identifier: 'riddle/riddle'
-)]
-final class BackendPreviewEventListener
+#[AsEventListener(identifier: 'riddle/backend-preview')]
+final readonly class BackendPreviewEventListener
 {
-    /** @var string */
-    private $template = 'EXT:riddle/Resources/Private/Templates/BackendPreview.html';
+    private const TEMPLATE = 'EXT:riddle/Resources/Private/Templates/BackendPreview.html';
+
+    public function __construct(
+        private ViewFactoryInterface $viewFactory,
+        private RiddleApi $riddleApi,
+    ) {}
 
     public function __invoke(PageContentPreviewRenderingEvent $event): void
     {
-        if ($event->getTable() !== 'tt_content') {
+        if ($event->getTable() !== 'tt_content' || $event->getRecordType() !== 'riddle_riddle') {
             return;
         }
 
-        if ($event->getRecord()['CType'] === 'list' && $event->getRecord()['list_type'] === 'riddle_riddle') {
-            $riddleId = RiddleUtility::getRiddleId($event->getRecord()['pi_flexform']);
+        $rawRecord = $event->getRecord()->getRawRecord();
+        $flexForm = $rawRecord?->has('pi_flexform') ? (string)$rawRecord->get('pi_flexform') : '';
+        $riddleId = RiddleUtility::getRiddleId($flexForm);
 
-            $standaloneView = $this->getView();
-            try {
-                $standaloneView->assignMultiple([
-                    'riddleId' => $riddleId,
-                    'riddle' => $this->getRiddleData($riddleId),
-                ]);
-            } catch (ApiConfigurationMissingException $exception) {
-                $standaloneView->assign('apiNotConfigured', true);
-            }
-
-            $event->setPreviewContent($standaloneView->render());
-        }
-    }
-
-    protected function getView(): StandaloneView
-    {
-        $standaloneView = GeneralUtility::makeInstance(StandaloneView::class);
-        $standaloneView->setTemplatePathAndFilename(GeneralUtility::getFileAbsFileName($this->template));
-        $standaloneView->assignMultiple([
+        $view = $this->viewFactory->create(new ViewFactoryData(
+            templatePathAndFilename: GeneralUtility::getFileAbsFileName(self::TEMPLATE),
+            request: $event->getPageLayoutContext()->getCurrentRequest(),
+        ));
+        $view->assignMultiple([
             'dateTime' => $GLOBALS['TYPO3_CONF_VARS']['SYS']['ddmmyy'] . ' ' . $GLOBALS['TYPO3_CONF_VARS']['SYS']['hhmm'],
             'lll' => 'LLL:EXT:riddle/Resources/Private/Language/locallang.xlf:',
+            'riddleId' => $riddleId,
         ]);
-        return $standaloneView;
-    }
+        if ($riddleId !== '') {
+            try {
+                $view->assign('riddle', RiddleUtility::enrichRiddleData($this->riddleApi->getRiddleItem($riddleId)));
+            } catch (ApiConfigurationMissingException) {
+                $view->assign('apiNotConfigured', true);
+            } catch (\Exception) {
+                // An unreachable API must not break the page module, the template shows a hint instead
+                $view->assign('riddle', []);
+            }
+        }
 
-    /**
-     * @param string|int $id
-     * @return array
-     */
-    protected function getRiddleData($id): array
-    {
-        $api = GeneralUtility::makeInstance(RiddleApi::class);
-        $item = $api->getRiddleItem($id);
-        return RiddleUtility::enrichRiddleData($item);
+        $event->setPreviewContent($view->render());
     }
 }

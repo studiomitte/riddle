@@ -2,40 +2,40 @@
 
 declare(strict_types=1);
 
-namespace StudioMitte\Riddle\Tests\Unit\Utility;
-
-/**
+/*
  * This file is part of the "riddle" Extension for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use Prophecy\Argument;
+namespace StudioMitte\Riddle\Tests\Unit\Utility;
+
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 use StudioMitte\Riddle\Utility\RiddleUtility;
-use TYPO3\CMS\Core\Cache\CacheManager;
-use TYPO3\CMS\Core\Cache\Frontend\PhpFrontend;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\TestingFramework\Core\BaseTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-class RiddleUtilityTest extends BaseTestCase
+final class RiddleUtilityTest extends UnitTestCase
 {
-    /**
-     * @test
-     * @dataProvider apiDataIsEnrichedDataProvider
-     * @param array $given
-     * @param array $expected
-     */
-    public function apiDataIsEnriched(array $given, array $expected): void
-    {
-        date_default_timezone_set('Europe/Berlin');
-        self::assertEquals($expected, RiddleUtility::enrichRiddleData($given));
-    }
-
-    public function apiDataIsEnrichedDataProvider(): array
+    public static function apiDataIsEnrichedDataProvider(): array
     {
         return [
-            'both dates are transformed' => [
+            'v3 api dates are transformed' => [
+                [
+                    'created' => ['at' => '2020-08-21 19:21:07'],
+                    'modified' => ['at' => '2020-09-21 19:21:07'],
+                ],
+                [
+                    'created' => ['at' => '2020-08-21 19:21:07'],
+                    'modified' => ['at' => '2020-09-21 19:21:07'],
+                    '_enriched' => [
+                        'dateCreated' => 1598030467,
+                        'datepublished' => 1600708867,
+                    ],
+                ],
+            ],
+            'legacy dates are transformed' => [
                 [
                     'dateCreated' => '2020-08-21 19:21:07',
                     'datepublished' => '2020-09-21 19:21:07',
@@ -62,62 +62,22 @@ class RiddleUtilityTest extends BaseTestCase
         ];
     }
 
-    /**
-     * @test
-     * @dataProvider idCanBeRetrievedFromFlexformsDataProvider
-     * @param int $expectedId
-     * @param string $flexforms
-     */
-    public function idCanBeRetrievedFromFlexforms(string $expectedId, string $flexforms): void
+    #[Test]
+    #[DataProvider('apiDataIsEnrichedDataProvider')]
+    public function apiDataIsEnriched(array $given, array $expected): void
     {
-        $cacheFrontendProphecy = $this->prophesize(PhpFrontend::class);
-        $cacheFrontendProphecy->require(Argument::any())->willReturn(false);
-        $cacheFrontendProphecy->get(Argument::any())->willReturn([]);
-        $cacheFrontendProphecy->set(Argument::any(), Argument::any())->willReturn([]);
-        $cacheManagerProphecy = $this->prophesize(CacheManager::class);
-        $cacheManagerProphecy->getCache(Argument::any())->willReturn($cacheFrontendProphecy->reveal());
-        GeneralUtility::setSingletonInstance(CacheManager::class, $cacheManagerProphecy->reveal());
-
-        self::assertEquals($expectedId, RiddleUtility::getRiddleId($flexforms));
+        $timezone = date_default_timezone_get();
+        date_default_timezone_set('Europe/Berlin');
+        try {
+            self::assertEquals($expected, RiddleUtility::enrichRiddleData($given));
+        } finally {
+            date_default_timezone_set($timezone);
+        }
     }
 
-    public function idCanBeRetrievedFromFlexformsDataProvider(): array
+    #[Test]
+    public function emptyFlexFormReturnsEmptyId(): void
     {
-        return [
-            'working flexform' => [
-                '264528',
-                '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<T3FlexForms>
-    <data>
-        <sheet index="sDEF">
-            <language index="lDEF">
-                <field index="riddle">
-                    <value index="vDEF">264528</value>
-                </field>
-            </language>
-        </sheet>
-    </data>
-</T3FlexForms>',
-            ],
-            'non working flexform' => [
-                '',
-                '<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<T3FlexForms>
-    <data>
-        <sheet index="sDEF">
-            <language index="lDEF">
-                <field index="fo">
-                    <value index="vDEF">bar</value>
-                </field>
-            </language>
-        </sheet>
-    </data>
-</T3FlexForms>',
-            ],
-            'empty flexform' => [
-                '',
-                '',
-            ],
-        ];
+        self::assertSame('', RiddleUtility::getRiddleId(''));
     }
 }

@@ -1,90 +1,51 @@
 <html xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
-            data-namespace-typo3-fluid="true">
-
-<nav class="pagination-wrap">
-    <ul class="pagination pagination-block">
-        <f:if condition="{pagination.hasLessPages}">
-            <f:then>
-                <li>
-                    <a href="{f:be.uri(route:'site_riddle', parameters: '{action: \'overview\', demand: demand.parameters, page: 1}')}" title="{f:translate(extensionName: 'fluid', key:'widget.pagination.first')}">
-                        <core:icon identifier="actions-view-paging-first" />
-                    </a>
-                </li>
-                <li>
-                    <a href="{f:be.uri(route:'site_riddle', parameters: '{action: \'overview\', demand: demand.parameters, page: pagination.previousPage}')}" title="{f:translate(extensionName: 'fluid', key:'widget.pagination.previous')}">
-                        <core:icon identifier="actions-view-paging-previous" />
-                    </a>
-                </li>
-            </f:then>
-            <f:else>
-                <li class="disabled">
-                        <span>
+    xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+<f:if condition="{pagination.numberOfPages} > 1">
+    <nav class="mb-3">
+        <ul class="pagination">
+            <f:if condition="{pagination.hasLessPages}">
+                <f:then>
+                    <li class="page-item">
+                        <a class="page-link" href="{f:be.uri(route: 'site_riddle', parameters: {type: demand.type, id: demand.id, page: 1})}">
                             <core:icon identifier="actions-view-paging-first" />
-                        </span>
-                </li>
-                <li class="disabled">
-                        <span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="{f:be.uri(route: 'site_riddle', parameters: {type: demand.type, id: demand.id, page: pagination.previousPage})}">
                             <core:icon identifier="actions-view-paging-previous" />
-                        </span>
-                </li>
-            </f:else>
-        </f:if>
-        <li>
-                <span>
-                    Riddle
-                    {pagination.startRecord} - {pagination.endRecord}
+                        </a>
+                    </li>
+                </f:then>
+                <f:else>
+                    <li class="page-item disabled"><span class="page-link"><core:icon identifier="actions-view-paging-first" /></span></li>
+                    <li class="page-item disabled"><span class="page-link"><core:icon identifier="actions-view-paging-previous" /></span></li>
+                </f:else>
+            </f:if>
+            <li class="page-item disabled">
+                <span class="page-link">
+                    {pagination.startRecord} - {pagination.endRecord} ({pagination.current} / {pagination.numberOfPages})
                 </span>
-        </li>
-        <li>
-                <span>
-                    <f:translate extensionName="fluid" key="widget.pagination.page" />
-                        <f:variable name="gotToPageUrl">
-                            <f:be.uri route="site_riddle" parameters="{action: 'overview', demand: demand.parameters, page: 987654322}" />
-                        </f:variable>
-                        <form data-on-submit="processNavigate" style="display:inline;">
-                            <f:form.textfield
-                                additionalAttributes="{min: 1, max: pagination.numberOfPages}"
-                                data="{number-of-pages: pagination.numberOfPages, url: gotToPageUrl}"
-                                name="paginator-target-page"
-                                class="form-control input-sm paginator-input"
-                                value="{pagination.current}"
-                                type="number" />
-                        </form>
-                    / {pagination.numberOfPages}
-                </span>
-        </li>
-        <f:if condition="{pagination.hasMorePages}">
-            <f:then>
-                <li>
-                    <a href="{f:be.uri(route:'site_riddle', parameters: '{action: \'overview\', demand: demand.parameters, page: pagination.nextPage}')}" title="{f:translate(extensionName: 'fluid', key:'widget.pagination.next')}">
-                        <core:icon identifier="actions-view-paging-next" />
-                    </a>
-                </li>
-                <li>
-                    <a href="{f:be.uri(route:'site_riddle', parameters: '{action: \'overview\', demand: demand.parameters, page: pagination.numberOfPages}')}" title="{f:translate(extensionName: 'fluid', key:'widget.pagination.last')}">
-                        <core:icon identifier="actions-view-paging-last" />
-                    </a>
-                </li>
-            </f:then>
-            <f:else>
-                <li class="disabled">
-                        <span>
+            </li>
+            <f:if condition="{pagination.hasMorePages}">
+                <f:then>
+                    <li class="page-item">
+                        <a class="page-link" href="{f:be.uri(route: 'site_riddle', parameters: {type: demand.type, id: demand.id, page: pagination.nextPage})}">
                             <core:icon identifier="actions-view-paging-next" />
-                        </span>
-                </li>
-                <li class="disabled">
-                        <span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="{f:be.uri(route: 'site_riddle', parameters: {type: demand.type, id: demand.id, page: pagination.numberOfPages})}">
                             <core:icon identifier="actions-view-paging-last" />
-                        </span>
-                </li>
-            </f:else>
-        </f:if>
-        <li>
-            <a href="{f:be.uri(route:'site_riddle', parameters: '{action: \'overview\', demand: demand.parameters, page: demand.page}')}" title="{f:translate(extensionName: 'fluid', key:'widget.pagination.refresh')}">
-                <core:icon identifier="actions-refresh" />
-            </a>
-        </li>
-    </ul>
-</nav>
-
+                        </a>
+                    </li>
+                </f:then>
+                <f:else>
+                    <li class="page-item disabled"><span class="page-link"><core:icon identifier="actions-view-paging-next" /></span></li>
+                    <li class="page-item disabled"><span class="page-link"><core:icon identifier="actions-view-paging-last" /></span></li>
+                </f:else>
+            </f:if>
+        </ul>
+    </nav>
+</f:if>
 </html>
