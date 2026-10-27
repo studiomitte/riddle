@@ -68,6 +68,39 @@
    <trans-unit id="link.edit" resname="link.edit">
     <source>Edit on riddle.com</source>
    </trans-unit>
+   <trans-unit id="module.title" resname="module.title">
+    <source>Riddle logs</source>
+   </trans-unit>
+   <trans-unit id="module.noEntries" resname="module.noEntries">
+    <source>No log entries found.</source>
+   </trans-unit>
+   <trans-unit id="module.export" resname="module.export">
+    <source>CSV export</source>
+   </trans-unit>
+   <trans-unit id="module.filter" resname="module.filter">
+    <source>Filter</source>
+   </trans-unit>
+   <trans-unit id="module.column.date" resname="module.column.date">
+    <source>Date</source>
+   </trans-unit>
+   <trans-unit id="module.column.lead" resname="module.column.lead">
+    <source>Lead</source>
+   </trans-unit>
+   <trans-unit id="tx_riddle_log" resname="tx_riddle_log">
+    <source>Riddle log</source>
+   </trans-unit>
+   <trans-unit id="tx_riddle_log.riddle_title" resname="tx_riddle_log.riddle_title">
+    <source>Title</source>
+   </trans-unit>
+   <trans-unit id="tx_riddle_log.lead_name" resname="tx_riddle_log.lead_name">
+    <source>Lead name</source>
+   </trans-unit>
+   <trans-unit id="tx_riddle_log.lead_email" resname="tx_riddle_log.lead_email">
+    <source>Lead email</source>
+   </trans-unit>
+   <trans-unit id="tx_riddle_log.result" resname="tx_riddle_log.result">
+    <source>Result</source>
+   </trans-unit>
   </body>
  </file>
 </xliff>

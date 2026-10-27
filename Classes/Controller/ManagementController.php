@@ -2,110 +2,84 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the "riddle" Extension for TYPO3 CMS.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ */
+
 namespace StudioMitte\Riddle\Controller;
 
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use StudioMitte\Riddle\Domain\Dto\LogDemand;
 use StudioMitte\Riddle\Domain\Repository\LogRepository;
-use TYPO3\CMS\Backend\Template\ModuleTemplate;
-use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
-use TYPO3\CMS\Core\Http\HtmlResponse;
-use TYPO3\CMS\Core\Localization\LanguageService;
-use TYPO3\CMS\Core\Page\PageRenderer;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Fluid\View\StandaloneView;
-use TYPO3Fluid\Fluid\View\ViewInterface;
+use TYPO3\CMS\Backend\Attribute\AsController;
+use TYPO3\CMS\Backend\Template\ModuleTemplateFactory;
+use TYPO3\CMS\Core\Http\Response;
 
-class ManagementController
+#[AsController]
+final readonly class ManagementController
 {
-    /**
-     * ModuleTemplate object
-     *
-     * @var ModuleTemplate
-     */
-    protected $moduleTemplate;
-
-    /**
-     * @var ViewInterface
-     */
-    protected $view;
-
-    /**
-     * @var ServerRequestInterface
-     */
-    protected $request;
-
-    /** @var LogRepository */
-    protected $logRepository;
-
-    public function __construct(private PageRenderer $pageRenderer)
-    {
-        $this->moduleTemplate = GeneralUtility::makeInstance(ModuleTemplate::class);
-        $this->pageRenderer->loadRequireJsModule('TYPO3/CMS/Backend/Modal');
-        $this->getLanguageService()->includeLLFile('EXT:riddle/Resources/Private/Language/locallang.xlf');
-        $this->logRepository = GeneralUtility::makeInstance(LogRepository::class);
-    }
+    public function __construct(
+        private ModuleTemplateFactory $moduleTemplateFactory,
+        private LogRepository $logRepository,
+    ) {}
 
     public function handleRequest(ServerRequestInterface $request): ResponseInterface
     {
-        $this->request = $request;
-        $action = $request->getQueryParams()['action'] ?? $request->getParsedBody()['action'] ?? 'overview';
-        $this->initializeView($action);
-
-        $result = call_user_func_array([$this, $action . 'Action'], [$request]);
-        if ($result instanceof ResponseInterface) {
-            return $result;
-        }
-        $this->moduleTemplate->setContent($this->view->render());
-        return new HtmlResponse($this->moduleTemplate->renderContent());
-    }
-
-    protected function overviewAction(ServerRequestInterface $request): void
-    {
         $demand = LogDemand::initialize($request);
-
         $count = $this->logRepository->countByDemand($demand);
 
         if ($count && $demand->isExport()) {
-            $this->exportLogs($demand);
+            return $this->exportLogs($demand);
         }
 
-        $this->view->assignMultiple([
+        $view = $this->moduleTemplateFactory->create($request);
+        $view->setTitle('Riddle');
+        $view->assignMultiple([
             'riddles' => $this->logRepository->findByDemand($demand),
             'filter' => $this->logRepository->getGroupingInformation(),
             'demand' => $demand,
             'pagination' => $this->preparePagination($demand, $count),
         ]);
+        return $view->renderResponse('Management/Overview');
     }
 
-    protected function exportLogs(LogDemand $demand)
+    private function exportLogs(LogDemand $demand): ResponseInterface
     {
         $demand
             ->setLimit(PHP_INT_MAX)
             ->setPage(1);
         $riddles = $this->logRepository->findByDemandForExport($demand);
 
-        $fp = fopen('php://output', 'wb');
-        header('Content-Type: text/csv');
-        header('Content-Disposition: attachment; filename="export.csv"');
-        header('Pragma: no-cache');
-        header('Expires: 0');
-        fputcsv($fp, array_keys($riddles[0]));
+        $columns = [];
         foreach ($riddles as $row) {
-            fputcsv($fp, array_values($row));
+            $columns += array_fill_keys(array_keys($row), '');
         }
-        fclose($fp);
-        die;
+
+        $stream = fopen('php://temp', 'w+b');
+        fputcsv($stream, array_keys($columns), ',', '"', '');
+        foreach ($riddles as $row) {
+            fputcsv($stream, array_values(array_replace($columns, $row)), ',', '"', '');
+        }
+        rewind($stream);
+        $csv = (string)stream_get_contents($stream);
+        fclose($stream);
+
+        $response = (new Response())
+            ->withHeader('Content-Type', 'text/csv; charset=utf-8')
+            ->withHeader('Content-Disposition', 'attachment; filename="riddle-export.csv"')
+            ->withHeader('Cache-Control', 'no-cache, no-store');
+        $response->getBody()->write($csv);
+        return $response;
     }
 
-    protected function preparePagination(LogDemand $demand, int $count): array
+    private function preparePagination(LogDemand $demand, int $count): array
     {
-        $numberOfPages = ceil($count / $demand->getLimit());
-        $endRecord = $demand->getOffset() + $demand->getLimit();
-        if ($endRecord > $count) {
-            $endRecord = $count;
-        }
+        $numberOfPages = (int)ceil($count / $demand->getLimit());
+        $endRecord = min($demand->getOffset() + $demand->getLimit(), $count);
 
         $pagination = [
             'current' => $demand->getPage(),
@@ -122,33 +96,5 @@ class ManagementController
             $pagination['previousPage'] = $pagination['current'] - 1;
         }
         return $pagination;
-    }
-
-    /**
-     * @param string $templateName
-     */
-    protected function initializeView(string $templateName): void
-    {
-        $this->view = GeneralUtility::makeInstance(StandaloneView::class);
-        $this->view->setTemplate($templateName);
-        $this->view->setTemplateRootPaths(['EXT:riddle/Resources/Private/Templates/Management']);
-        $this->view->setPartialRootPaths(['EXT:riddle/Resources/Private/Partials']);
-        $this->view->setLayoutRootPaths(['EXT:riddle/Resources/Private/Layouts']);
-    }
-
-    /**
-     * @return LanguageService
-     */
-    protected function getLanguageService(): LanguageService
-    {
-        return $GLOBALS['LANG'];
-    }
-
-    /**
-     * @return BackendUserAuthentication
-     */
-    protected function getBackendUserAuthentication(): BackendUserAuthentication
-    {
-        return $GLOBALS['BE_USER'];
     }
 }

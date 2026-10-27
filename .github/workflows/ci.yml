@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+    tags: [ '*' ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  composer-validate:
+    name: Composer validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      - run: composer validate --strict --no-check-lock
+
+  cgl:
+    name: Coding guidelines
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          coverage: none
+      - run: composer update --no-progress --prefer-dist
+      - run: composer ci:cgl
+
+  tests:
+    name: TYPO3 ${{ matrix.typo3 }} / PHP ${{ matrix.php }} (${{ matrix.dependencies }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        typo3: [ '^14.0' ]
+        php: [ '8.2', '8.3', '8.4', '8.5' ]
+        dependencies: [ 'highest' ]
+        include:
+          - typo3: '^14.0'
+            php: '8.2'
+            dependencies: 'lowest'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+          tools: composer:v2
+      - name: Lint PHP
+        run: composer ci:lint
+      - name: Install dependencies
+        run: |
+          composer require --no-update --no-progress \
+            typo3/cms-backend:${{ matrix.typo3 }} \
+            typo3/cms-core:${{ matrix.typo3 }} \
+            typo3/cms-fluid:${{ matrix.typo3 }} \
+            typo3/cms-frontend:${{ matrix.typo3 }}
+          composer update --no-progress --prefer-dist ${{ matrix.dependencies == 'lowest' && '--prefer-lowest' || '' }}
+      - name: Unit tests
+        run: composer ci:tests:unit
+
+  release-version:
+    name: Tag matches ext_emconf version
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Compare tag with ext_emconf.php
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          EMCONF=$(sed -n "s/.*'version' => '\([^']*\)'.*/\1/p" ext_emconf.php)
+          echo "tag=$TAG ext_emconf=$EMCONF"
+          test "$TAG" = "$EMCONF"

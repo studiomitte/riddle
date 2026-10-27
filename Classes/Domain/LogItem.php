@@ -2,13 +2,20 @@
 
 declare(strict_types=1);
 
+/*
+ * This file is part of the "riddle" Extension for TYPO3 CMS.
+ *
+ * For the full copyright and license information, please read the
+ * LICENSE.txt file that was distributed with this source code.
+ */
+
 namespace StudioMitte\Riddle\Domain;
 
 class LogItem
 {
     public static function convert(array $raw): array
     {
-        $raw = $raw['data'];
+        $raw = $raw['data'] ?? [];
         $data = [
             'riddle_id' => $raw['riddle']['id'] ?? 0,
             'riddle_title' => $raw['riddle']['title'] ?? '',

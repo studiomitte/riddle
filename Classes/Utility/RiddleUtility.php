@@ -2,34 +2,31 @@
 
 declare(strict_types=1);
 
-namespace StudioMitte\Riddle\Utility;
-
-/**
+/*
  * This file is part of the "riddle" Extension for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use TYPO3\CMS\Core\Service\FlexFormService;
+namespace StudioMitte\Riddle\Utility;
+
+use TYPO3\CMS\Core\Configuration\FlexForm\FlexFormTools;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class RiddleUtility
 {
     /**
      * Enrich the API riddle response
-     *
-     * @param array $item
-     * @return array
      */
     public static function enrichRiddleData(array $item): array
     {
         if (isset($item['created']) && is_array($item['created'])) {
-            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $item['created']['at']);
+            $date = \DateTime::createFromFormat('Y-m-d H:i:s', (string)($item['created']['at'] ?? ''));
             if ($date) {
                 $item['_enriched']['dateCreated'] = $date->getTimestamp();
             }
-            $date = \DateTime::createFromFormat('Y-m-d H:i:s', $item['modified']['at']);
+            $date = \DateTime::createFromFormat('Y-m-d H:i:s', (string)($item['modified']['at'] ?? ''));
             if ($date) {
                 $item['_enriched']['datepublished'] = $date->getTimestamp();
             }
@@ -50,16 +47,13 @@ class RiddleUtility
 
     /**
      * Get riddle ID from given flexform XML
-     *
-     * @param string $flexforms
-     * @return string
      */
-    public static function getRiddleId(string $flexforms)
+    public static function getRiddleId(string $flexforms): string
     {
-        if (!$flexforms) {
+        if ($flexforms === '') {
             return '';
         }
-        $data = GeneralUtility::makeInstance(FlexFormService::class)->convertFlexFormContentToArray($flexforms);
-        return $data['riddle'] ?? '';
+        $data = GeneralUtility::makeInstance(FlexFormTools::class)->convertFlexFormContentToArray($flexforms);
+        return (string)($data['riddle'] ?? '');
     }
 }

@@ -2,159 +2,104 @@
 
 declare(strict_types=1);
 
-namespace StudioMitte\Riddle\Tests\Unit\Api;
-
-/**
+/*
  * This file is part of the "riddle" Extension for TYPO3 CMS.
  *
  * For the full copyright and license information, please read the
  * LICENSE.txt file that was distributed with this source code.
  */
 
-use GuzzleHttp\Client;
+namespace StudioMitte\Riddle\Tests\Unit\Api;
+
+use PHPUnit\Framework\Attributes\Test;
 use StudioMitte\Riddle\Api\RiddleApi;
+use StudioMitte\Riddle\Exception\ApiConfigurationMissingException;
 use StudioMitte\Riddle\ExtensionConfiguration;
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration as CoreExtensionConfiguration;
+use TYPO3\CMS\Core\Http\RequestFactory;
 use TYPO3\CMS\Core\Http\Response;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\TestingFramework\Core\BaseTestCase;
+use TYPO3\TestingFramework\Core\Unit\UnitTestCase;
 
-class RiddleApiTest extends BaseTestCase
+final class RiddleApiTest extends UnitTestCase
 {
-    private $listOfRiddles = [
-        [
-            'title' => 'riddle 1',
-            'id' => 123,
-        ],
-        [
-            'title' => 'riddle 2',
-            'id' => 456,
-        ],
-    ];
-
-    /**
-     * @test
-     */
-    public function riddleListReturnsResult(): void
+    private function createSubject(string $apiKey, ?Response $response = null): RiddleApi
     {
-        $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['request'], [], '', false);
-        $mockedRiddleApi->expects(self::once())->method('request')->with('riddle/list')->willReturn($this->listOfRiddles);
+        $coreExtensionConfiguration = $this->createMock(CoreExtensionConfiguration::class);
+        $coreExtensionConfiguration->method('get')->with('riddle', 'apiKey')->willReturn($apiKey);
 
-        /** @var ExtensionConfiguration $extensionConfiguration */
-        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
-        $extensionConfiguration->getApiKey()->willReturn('abc');
-        $mockedRiddleApi->_set('extensionConfiguration', $extensionConfiguration->reveal());
+        $requestFactory = $this->createMock(RequestFactory::class);
+        if ($response !== null) {
+            $requestFactory->expects(self::once())->method('request')
+                ->with(
+                    self::stringStartsWith('https://www.riddle.com/api/v3/'),
+                    self::anything(),
+                    self::callback(static fn(array $options): bool => $options['headers']['X-RIDDLE-BEARER'] === 'Bearer ' . $apiKey)
+                )
+                ->willReturn($response);
+        } else {
+            $requestFactory->expects(self::never())->method('request');
+        }
 
-        $riddles = $mockedRiddleApi->getRiddleList();
-        self::assertEquals($this->listOfRiddles, $riddles);
+        return new RiddleApi(new ExtensionConfiguration($coreExtensionConfiguration), $requestFactory);
     }
 
-    /**
-     * @test
-     * @dataProvider riddleIdReturnsResultDataProvider
-     * @param int $id
-     * @param array $expectedResult
-     */
-    public function riddleIdReturnsResult(int $id, array $expectedResult): void
+    private function createResponse(string $body, int $status = 200): Response
     {
-        $response = ['response' => ['items' => $this->listOfRiddles]];
-        $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['request'], [], '', false);
-        $mockedRiddleApi->expects(self::once())->method('request')->with('riddle/list')->willReturn($response);
-
-        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
-        $extensionConfiguration->getApiKey()->willReturn('abc');
-        $mockedRiddleApi->_set('extensionConfiguration', $extensionConfiguration->reveal());
-
-        $riddle = $mockedRiddleApi->getRiddleItem($id);
-        self::assertEquals($expectedResult, $riddle);
-    }
-
-    public function riddleIdReturnsResultDataProvider(): array
-    {
-        return [
-            'riddle found' => [
-                456, [
-                    'title' => 'riddle 2',
-                    'id' => 456,
-                ],
-            ],
-            'no riddle found' => [
-                123456, [],
-            ],
-        ];
-    }
-
-    /**
-     * @test
-     */
-    public function embedCodeReturnsResult(): void
-    {
-        $response = ['response' => 'some html'];
-        $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['request'], [], '', false);
-        $mockedRiddleApi->expects(self::once())->method('request')->with('riddle/embed-code/123')->willReturn($response);
-
-        $extensionConfiguration = $this->prophesize(ExtensionConfiguration::class);
-        $extensionConfiguration->getApiKey()->willReturn('abc');
-        $mockedRiddleApi->_set('extensionConfiguration', $extensionConfiguration->reveal());
-
-        self::assertEquals($response, $mockedRiddleApi->getEmbedCode(123));
-    }
-
-    /**
-     * @test
-     */
-    public function constructorSetsExtensionConfiguration(): void
-    {
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['riddle'] = ['apiKey' => '123'];
-        $configuration = new ExtensionConfiguration();
-
-        $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['request'], [], '', true);
-
-        /** @var ExtensionConfiguration $extensionConfigurationFromApi */
-        $extensionConfigurationFromApi = $mockedRiddleApi->_get('extensionConfiguration');
-        self::assertEquals(123, $configuration->getApiKey());
-    }
-
-    /**
-     * @test
-     */
-    public function requestIsProperlyBuilt(): void
-    {
-        $expected = ['response' => ['works' => 1]];
-        $response = new Response();
-        $response->getBody()->write(json_encode($expected));
+        $response = new Response('php://temp', $status);
+        $response->getBody()->write($body);
         $response->getBody()->rewind();
-
-        $client = $this->getAccessibleMock(Client::class, ['request'], [], '', true);
-        $client->expects(self::once())->method('request')->willReturn($response);
-        GeneralUtility::addInstance(Client::class, $client);
-
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['riddle'] = ['apiKey' => '123', 'apiToken' => 456];
-
-        $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['dummy'], [], '', true);
-
-        self::assertEquals($expected, $mockedRiddleApi->_call('request', 'action'));
+        return $response;
     }
 
-    /**
-     * @test
-     */
-    public function requestErrorThrowsException(): void
+    #[Test]
+    public function riddleListReturnsDataOfResponse(): void
+    {
+        $riddles = [['UUID' => 'abc', 'title' => 'riddle 1']];
+        $subject = $this->createSubject('key', $this->createResponse(json_encode(['data' => $riddles])));
+
+        self::assertSame($riddles, $subject->getRiddleList());
+    }
+
+    #[Test]
+    public function riddleItemIsFoundByUuid(): void
+    {
+        $riddles = [['UUID' => 'abc', 'title' => 'riddle 1'], ['UUID' => 'def', 'title' => 'riddle 2']];
+        $subject = $this->createSubject('key', $this->createResponse(json_encode(['data' => $riddles])));
+
+        self::assertSame($riddles[1], $subject->getRiddleItem('def'));
+    }
+
+    #[Test]
+    public function unknownRiddleItemReturnsEmptyArray(): void
+    {
+        $subject = $this->createSubject('key', $this->createResponse(json_encode(['data' => [['UUID' => 'abc']]])));
+
+        self::assertSame([], $subject->getRiddleItem('xyz'));
+    }
+
+    #[Test]
+    public function embedCodeIsReturnedAsString(): void
+    {
+        $subject = $this->createSubject('key', $this->createResponse('<div>embed</div>'));
+
+        self::assertSame('<div>embed</div>', $subject->getEmbedCode('abc'));
+    }
+
+    #[Test]
+    public function nonSuccessfulResponseThrowsException(): void
     {
         $this->expectException(\UnexpectedValueException::class);
         $this->expectExceptionCode(1597956586);
-        $expected = ['response' => ['works' => 1]];
-        $response = new Response('php://temp', 404);
-        $response->getBody()->write(json_encode($expected));
-        $response->getBody()->rewind();
 
-        $client = $this->getAccessibleMock(Client::class, ['request'], [], '', true);
-        $client->expects(self::once())->method('request')->willReturn($response);
-        GeneralUtility::addInstance(Client::class, $client);
+        $this->createSubject('key', $this->createResponse('', 204))->getRiddleList();
+    }
 
-        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['riddle'] = ['apiKey' => '123', 'apiToken' => 456];
+    #[Test]
+    public function missingApiKeyThrowsException(): void
+    {
+        $this->expectException(ApiConfigurationMissingException::class);
+        $this->expectExceptionCode(1598035744);
 
-        $mockedRiddleApi = $this->getAccessibleMock(RiddleApi::class, ['dummy'], [], '', true);
-
-        self::assertEquals($expected, $mockedRiddleApi->_call('request', 'action'));
+        $this->createSubject('')->getRiddleList();
     }
 }

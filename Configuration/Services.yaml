@@ -2,11 +2,17 @@ services:
   _defaults:
     autowire: true
     autoconfigure: true
+    public: false
 
   StudioMitte\Riddle\:
     resource: '../Classes/*'
 
-  StudioMitte\Riddle\Backend\EventListener\BackendPreviewEventListener:
-    tags:
-      - name: event.listener
-        identifier: 'riddle/riddle'
+  # Instantiated via GeneralUtility::makeInstance() from itemsProcFunc / userFunc contexts
+  StudioMitte\Riddle\Api\RiddleApi:
+    public: true
+
+  StudioMitte\Riddle\Controller\PluginController:
+    public: true
+
+  StudioMitte\Riddle\Middleware\WebhookEndpoint:
+    public: true

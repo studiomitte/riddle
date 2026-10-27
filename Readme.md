@@ -1,10 +1,24 @@
 # TYPO3 Extension `riddle`
 
-![Build Status](https://github.com/studiomitte/riddle/workflows/CI/badge.svg)
+[![CI](https://github.com/studiomitte/riddle/actions/workflows/ci.yml/badge.svg)](https://github.com/studiomitte/riddle/actions/workflows/ci.yml)
 
 This extension embeds rich media from [riddle.com](https://www.riddle.com)
 
 ![Plugin in Backend](Documentation/Images/backend.png)
+
+## Compatibility
+
+| Version | TYPO3 | PHP       |
+|---------|-------|-----------|
+| 3.x     | 14    | 8.2 - 8.5 |
+| 2.x     | 12    | 8.1 - 8.2 |
+
+### Upgrading from 2.x
+
+Since 3.0 the plugin is a content element type of its own (`CType = riddle_riddle`) instead of a
+`list_type` plugin. After updating, run the upgrade wizard *"Migrate riddle plugins to content elements"*
+(`vendor/bin/typo3 upgrade:run riddlePluginListTypeToCTypeUpdate`). If you customized the rendering,
+move your TypoScript from `tt_content.list.20.riddle_riddle` to `tt_content.riddle_riddle.20`.
 
 ## Installation
 
@@ -15,7 +29,7 @@ Now switch to the [riddle.com account page](https://www.riddle.com/creator/accou
 
 ![riddle.com API](Documentation/Images/riddleApi.png)
 
-Open the settings in TYPO3 Install Tool and paste the 2 keys there.
+Open *Admin Tools > Settings > Extension Configuration > riddle* and paste the API key there.
 
 ![Settings in TYPO3](Documentation/Images/settings.png)
 
@@ -33,12 +47,14 @@ Therefore you are not required to ask your website users for permissions display
 
 ## Modify rendering
 
-The rendering is controlled with the TypoScript shipped in the `ext_typoscript_setup.typoscript` which is loaded by default.
+The rendering is controlled with the TypoScript registered in `ext_localconf.php` which is loaded by default.
 
 ```typo3_typoscript
-tt_content.list.20.riddle_riddle = USER
-tt_content.list.20.riddle_riddle {
-    userFunc = StudioMitte\Riddle\Controller\PluginController->run
+tt_content.riddle_riddle =< lib.contentElement
+tt_content.riddle_riddle {
+    templateName = Generic
+    20 = USER
+    20.userFunc = StudioMitte\Riddle\Controller\PluginController->run
 }
 ```
 
